@@ -3,132 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Subject Exam Portal</title>
+    <title>Multi-Subject Professional Exam Portal</title>
     <style>
-        :root { --primary: #4f46e5; --secondary: #ec4899; --bg: #eef2ff; --glass: rgba(255, 255, 255, 0.95); }
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .card { max-width: 600px; width: 100%; background: var(--glass); padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.6s ease-out; text-align: center; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Subject Grid */
-        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .sub-btn { padding: 20px; border-radius: 15px; border: none; background: white; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; font-size: 16px; border-bottom: 4px solid var(--primary); }
-        .sub-btn:hover { transform: translateY(-5px); background: #f8faff; }
-        .sub-btn.completed { opacity: 0.6; border-bottom-color: #10b981; }
+        :root { --primary: #4f46e5; --secondary: #ec4899; --bg: #f3f4f6; --glass: #ffffff; --success: #10b981; --danger: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #4338ca 0%, #9333ea 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { max-width: 650px; width: 100%; background: var(--glass); padding: 35px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Existing Styles */
-        input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 18px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .info-dashboard { display: flex; gap: 10px; margin-bottom: 20px; }
-        .info-box { flex: 1; padding: 10px; background: white; border-radius: 12px; border-bottom: 3px solid var(--primary); font-size: 14px; }
-        .opt-btn { width: 100%; background: white; border: 2px solid #f1f5f9; padding: 15px; border-radius: 12px; cursor: pointer; margin-bottom: 10px; text-align: left; }
-        .opt-btn.selected { background: var(--primary); color: white; }
-        #subject-section, #quiz-section, #finish-screen { display: none; }
+        /* Dashboard & Buttons */
+        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
+        .sub-btn { padding: 20px; border-radius: 15px; border: none; background: #f8fafc; cursor: pointer; font-weight: bold; border-bottom: 4px solid #ddd; transition: 0.3s; }
+        .sub-btn:hover:not(:disabled) { transform: translateY(-3px); border-bottom-color: var(--primary); background: #f1f5f9; }
+        .sub-btn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; border-bottom-color: var(--success); }
+        
+        .btn-main { width: 100%; padding: 18px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; font-size: 16px; }
+
+        /* Quiz UI */
+        .info-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .info-item { flex: 1; background: #f1f5f9; padding: 10px; border-radius: 10px; font-size: 13px; }
+        .q-text { font-size: 20px; font-weight: 700; margin: 20px 0; color: #1e293b; text-align: left; }
+        .opt-btn { width: 100%; background: white; border: 2px solid #e2e8f0; padding: 15px; border-radius: 12px; cursor: pointer; margin-bottom: 10px; text-align: left; transition: 0.2s; }
+        .opt-btn:hover { border-color: var(--primary); }
+        .opt-btn.correct-select { background: var(--primary); color: white; }
+
+        /* Result Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #e2e8f0; text-align: left; }
+        th { background: #f8fafc; }
+        .pass { color: var(--success); font-weight: bold; }
+        .fail { color: var(--danger); font-weight: bold; }
+
+        #subject-screen, #quiz-screen, #result-screen { display: none; }
     </style>
 </head>
 <body>
 
-<!-- 1. ലോഗിൻ -->
-<div class="card" id="login-section">
-    <h1>🚀 Exam Portal</h1>
-    <input type="text" id="student-name" placeholder="പേര് (Student Name)">
-    <input type="text" id="student-class" placeholder="ക്ലാസ്സ് (Class)">
-    <button class="btn-main" onclick="goToSubjects()">തുടങ്ങാം</button>
+<!-- 1. Login -->
+<div class="card" id="login-screen">
+    <h1 style="color: var(--primary);">🎓 Student Portal</h1>
+    <p>വിവരങ്ങൾ നൽകി പ്രവേശിക്കുക</p>
+    <input type="text" id="s-name" placeholder="പേര് (Name)">
+    <input type="text" id="s-class" placeholder="ക്ലാസ്സ് (Class)">
+    <button class="btn-main" onclick="showSubjects()">ENTER DASHBOARD</button>
 </div>
 
-<!-- 2. സബ്ജക്ട് സെലക്ഷൻ -->
-<div class="card" id="subject-section">
-    <h2>വിഷയം തിരഞ്ഞെടുക്കുക</h2>
-    <div class="subject-grid">
-        <button class="sub-btn" id="btn-mal" onclick="startQuiz('Malayalam')">Malayalam</button>
-        <button class="sub-btn" id="btn-eng" onclick="startQuiz('English')">English</button>
-        <button class="sub-btn" id="btn-mat" onclick="startQuiz('Maths')">Maths</button>
-        <button class="sub-btn" id="btn-sci" onclick="startQuiz('Science')">Science</button>
-        <button class="sub-btn" id="btn-soc" onclick="startQuiz('Social')">Social</button>
+<!-- 2. Subject Selection -->
+<div class="card" id="subject-screen">
+    <h2 id="welcome-msg">ഹലോ!</h2>
+    <p>ഒരു വിഷയം തിരഞ്ഞെടുത്ത് പരീക്ഷ എഴുതുക</p>
+    <div class="subject-grid" id="sub-grid">
+        <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
+        <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
+        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Maths</button>
+        <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
+        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social</button>
     </div>
+    <button id="final-res-btn" class="btn-main" style="display:none; background: var(--success);" onclick="showFinalResult()">VIEW FINAL RESULT</button>
 </div>
 
-<!-- 3. പരീക്ഷാ സ്ക്രീൻ -->
-<div class="card" id="quiz-section">
-    <div class="info-dashboard">
-        <div class="info-box"><small>STUDENT</small><br><b id="disp-name"></b></div>
-        <div class="info-box"><small>SUBJECT</small><br><b id="disp-sub"></b></div>
+<!-- 3. Quiz Screen -->
+<div class="card" id="quiz-screen">
+    <div class="info-bar">
+        <div class="info-item">SUBJECT: <b id="cur-sub-name"></b></div>
+        <div class="info-item">Q: <b id="q-progress">0/10</b></div>
     </div>
     <div id="quiz-container"></div>
 </div>
 
-<!-- 4. ഫിനിഷ് സ്ക്രീൻ -->
-<div class="card" id="finish-screen">
-    <h1>🎉 Done!</h1>
-    <p>ഈ വിഷയം പൂർത്തിയായി.</p>
-    <button class="btn-main" onclick="goToSubjects()">അടുത്ത വിഷയം തിരഞ്ഞെടുക്കൂ</button>
+<!-- 4. Result Screen -->
+<div class="card" id="result-screen">
+    <h2 style="color: var(--primary);">Exam Result 📜</h2>
+    <div id="student-summary" style="margin-bottom: 20px; font-weight: bold;"></div>
+    <table>
+        <thead><tr><th>Subject</th><th>Score</th><th>Status</th></tr></thead>
+        <tbody id="result-table-body"></tbody>
+    </table>
+    <h3 id="overall-status" style="margin-top:20px;"></h3>
+    <button class="btn-main" onclick="location.reload()">RESTART ALL</button>
 </div>
 
 <script>
-    let studentName = "", studentClass = "", currentSubject = "";
-    let completedSubjects = [];
+    let studentInfo = { name: "", class: "" };
+    let scores = {}; // ഓരോ വിഷയത്തിന്റെയും മാർക്ക് സ്റ്റോർ ചെയ്യാൻ
+    let currentSub = "";
+    let qIdx = 0;
 
-    // ചോദ്യങ്ങൾ ഇവിടെ വിഷയങ്ങൾ തിരിച്ചു നൽകാം
-    const allQuestions = {
+    // 10 ചോദ്യങ്ങൾ വീതം (ഇവിടെ 2 എണ്ണം വീതം മാതൃകയ്ക്ക് നൽകുന്നു, നിങ്ങൾക്കത് 10 ആക്കാം)
+    const questions = {
         'Malayalam': [
-            { q: "മലയാളത്തിലെ ആദ്യത്തെ നോവൽ?", options: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ"] },
-            { q: "കേരള സിംഹം എന്നറിയപ്പെടുന്നത്?", options: ["പഴശ്ശിരാജ", "വേലുത്തമ്പി", "ദളവ"] }
+            { q: "മലയാളത്തിലെ ആദ്യ നോവൽ?", opts: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ"], a: "കുന്ദലത" },
+            { q: "കേരളത്തിന്റെ മാമാങ്കം നടന്ന സ്ഥലം?", opts: ["തിരുനാവായ", "കൊച്ചി", "കോഴിക്കോട്"], a: "തിരുനാവായ" }
+            // ... ബാക്കി 8 ചോദ്യങ്ങൾ കൂടി ചേർക്കാം
         ],
         'English': [
-            { q: "Opposite of 'Happy'?", options: ["Sad", "Joy", "Angry"] },
-            { q: "Noun in 'The cat sat'?", options: ["Cat", "Sat", "The"] }
+            { q: "Opposite of 'Huge'?", opts: ["Tiny", "Big", "Large"], a: "Tiny" },
+            { q: "Plural of 'Mouse'?", opts: ["Mice", "Mouses", "Rat"], a: "Mice" }
         ],
-        'Maths': [ { q: "10 + 15 = ?", options: ["25", "30", "20"] } ],
-        'Science': [ { q: "Powerhouse of cell?", options: ["Mitochondria", "Nucleus", "Ribosome"] } ],
-        'Social': [ { q: "First PM of India?", options: ["Nehru", "Gandhi", "Ambedkar"] } ]
+        'Maths': [
+            { q: "25 x 4 = ?", opts: ["100", "80", "120"], a: "100" },
+            { q: "Square root of 81?", opts: ["9", "7", "8"], a: "9" }
+        ],
+        'Science': [
+            { q: "പവർ ഹൗസ് ഓഫ് സെൽ?", opts: ["മൈറ്റോകോൺട്രിയ", "ന്യൂക്ലിയസ്", "റൈബോസോം"], a: "മൈറ്റോകോൺട്രിയ" },
+            { q: "ജലത്തിന്റെ രാസസൂത്രം?", opts: ["H2O", "CO2", "O2"], a: "H2O" }
+        ],
+        'Social': [
+            { q: "ഇന്ത്യയുടെ ആദ്യ പ്രധാനമന്ത്രി?", opts: ["നെഹ്‌റു", "ഗാന്ധിജി", "പട്ടേൽ"], a: "നെഹ്‌റു" },
+            { q: "ലോക പരിസ്ഥിതി ദിനം?", opts: ["ജൂൺ 5", "ജൂലൈ 5", "ജൂൺ 15"], a: "ജൂൺ 5" }
+        ]
     };
 
-    function goToSubjects() {
-        studentName = document.getElementById('student-name').value;
-        studentClass = document.getElementById('student-class').value;
-        if(!studentName) return alert("പേര് നൽകുക");
-
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('finish-screen').style.display = 'none';
-        document.getElementById('subject-section').style.display = 'block';
-        document.getElementById('quiz-section').style.display = 'none';
+    function showSubjects() {
+        studentInfo.name = document.getElementById('s-name').value;
+        studentInfo.class = document.getElementById('s-class').value;
+        if(!studentInfo.name || !studentInfo.class) return alert("വിവരങ്ങൾ നൽകുക!");
+        
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('subject-screen').style.display = 'block';
+        document.getElementById('welcome-msg').innerText = `ഹലോ, ${studentInfo.name}!`;
     }
 
-    let qIdx = 0;
     function startQuiz(sub) {
-        currentSubject = sub;
+        currentSub = sub;
         qIdx = 0;
-        document.getElementById('subject-section').style.display = 'none';
-        document.getElementById('quiz-section').style.display = 'block';
-        document.getElementById('disp-name').innerText = studentName;
-        document.getElementById('disp-sub').innerText = sub;
+        scores[sub] = 0;
+        document.getElementById('subject-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('cur-sub-name').innerText = sub;
         loadQuestion();
     }
 
     function loadQuestion() {
-        const questions = allQuestions[currentSubject];
-        if(qIdx >= questions.length) {
-            showSubjectFinish();
+        const subList = questions[currentSub];
+        if(qIdx >= subList.length) {
+            finishSubject();
             return;
         }
-        const item = questions[qIdx];
+        document.getElementById('q-progress').innerText = `${qIdx+1}/${subList.length}`;
+        const item = subList[qIdx];
         document.getElementById('quiz-container').innerHTML = `
-            <h3>${item.q}</h3>
-            ${item.options.map(opt => `<button class="opt-btn" onclick="nextQ(this)">${opt}</button>`).join('')}
+            <div class="q-text">${item.q}</div>
+            ${item.opts.map(o => `<button class="opt-btn" onclick="checkAnswer('${o}', this)">${o}</button>`).join('')}
         `;
     }
 
-    function nextQ(btn) {
-        btn.classList.add('selected');
+    function checkAnswer(selected, btn) {
+        const correct = questions[currentSub][qIdx].a;
+        if(selected === correct) scores[currentSub]++;
+        btn.classList.add('correct-select');
         setTimeout(() => { qIdx++; loadQuestion(); }, 500);
     }
 
-    function showSubjectFinish() {
-        document.getElementById('quiz-section').style.display = 'none';
-        document.getElementById('finish-screen').style.display = 'block';
-        // മാർക്ക് സബ്ജക്ട് ആസ് കംപ്ലീറ്റഡ്
-        completedSubjects.push(currentSubject);
-        // സബ്ജക്ട് ബട്ടൺ കളർ മാറ്റാൻ (optional logic here)
+    function finishSubject() {
+        document.getElementById('btn-' + currentSub).disabled = true;
+        document.getElementById('btn-' + currentSub).innerText = currentSub + " (Done ✅)";
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('subject-screen').style.display = 'block';
+
+        if(Object.keys(scores).length === 5) {
+            document.getElementById('final-res-btn').style.display = 'block';
+        }
+    }
+
+    function showFinalResult() {
+        document.getElementById('subject-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('student-summary').innerText = `Name: ${studentInfo.name} | Class: ${studentInfo.class}`;
+        
+        let tableBody = "";
+        let totalPass = true;
+
+        for(let sub in questions) {
+            let score = scores[sub] || 0;
+            let totalQ = questions[sub].length;
+            let status = (score >= totalQ/2) ? "PASS" : "FAIL"; // 50% മാർക്ക് പാസ്സാകാൻ
+            if(status === "FAIL") totalPass = false;
+
+            tableBody += `<tr>
+                <td>${sub}</td>
+                <td>${score} / ${totalQ}</td>
+                <td class="${status.toLowerCase()}">${status}</td>
+            </tr>`;
+        }
+        document.getElementById('result-table-body').innerHTML = tableBody;
+        document.getElementById('overall-status').innerHTML = totalPass ? 
+            "<span class='pass'>Congratulations! You Passed All Exams! 🏆</span>" : 
+            "<span class='fail'>Hard Luck! Try Again to Pass All Subjects.</span>";
     }
 </script>
 </body>
