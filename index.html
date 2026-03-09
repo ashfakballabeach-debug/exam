@@ -3,217 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Exam Portal</title>
+    <title>Multi-Subject Exam Portal</title>
     <style>
-        :root { 
-            --primary: #4f46e5; 
-            --secondary: #ec4899; 
-            --accent: #f59e0b; 
-            --bg: #eef2ff; 
-            --glass: rgba(255, 255, 255, 0.95);
-        }
-        
-        body { 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-        }
-
-        .card { 
-            max-width: 600px; width: 100%; background: var(--glass); 
-            padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.6s ease-out; position: relative; overflow: hidden;
-        }
-
+        :root { --primary: #4f46e5; --secondary: #ec4899; --bg: #eef2ff; --glass: rgba(255, 255, 255, 0.95); }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { max-width: 600px; width: 100%; background: var(--glass); padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.6s ease-out; text-align: center; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Welcome Screen Design */
-        .welcome-title { font-size: 28px; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
-        .welcome-subtitle { color: #64748b; margin-bottom: 30px; }
         
-        .input-container { position: relative; margin-bottom: 20px; }
-        input { 
-            width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px; 
-            font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(79, 70, 229, 0.1); }
+        /* Subject Grid */
+        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .sub-btn { padding: 20px; border-radius: 15px; border: none; background: white; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; font-size: 16px; border-bottom: 4px solid var(--primary); }
+        .sub-btn:hover { transform: translateY(-5px); background: #f8faff; }
+        .sub-btn.completed { opacity: 0.6; border-bottom-color: #10b981; }
 
-        .btn-start { 
-            width: 100%; padding: 18px; background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; transform: scale(1);
-        }
-        .btn-start:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-
-        /* Professional Dashboard Bar */
-        #quiz-section { display: none; }
-        .info-dashboard { 
-            display: flex; gap: 15px; margin-bottom: 25px; 
-            animation: fadeIn 1s ease;
-        }
-        .info-box { 
-            flex: 1; padding: 12px; border-radius: 15px; text-align: center;
-            background: white; border-bottom: 4px solid var(--primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .info-box.class-box { border-bottom-color: var(--secondary); }
-        .info-label { font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; }
-        .info-value { display: block; font-size: 16px; font-weight: 700; color: #334155; }
-
-        /* Quiz UI */
-        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .timer-tag { background: #fff7ed; color: #c2410c; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-        
-        .progress-bar-bg { background: #e2e8f0; height: 8px; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        .progress-fill { background: linear-gradient(to right, var(--primary), var(--secondary)); width: 0%; height: 100%; transition: 0.5s; }
-
-        .q-text { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 25px; line-height: 1.4; }
-        .options-list { display: grid; gap: 12px; }
-        .opt-btn { 
-            background: white; border: 2px solid #f1f5f9; padding: 16px; border-radius: 15px; 
-            cursor: pointer; text-align: left; font-size: 16px; font-weight: 500; transition: 0.2s;
-        }
-        .opt-btn:hover { border-color: var(--primary); background: #f8faff; }
-        .opt-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-
-        #finish-screen { display: none; text-align: center; }
-        .confetti { font-size: 50px; margin-bottom: 20px; display: block; }
+        /* Existing Styles */
+        input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 18px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .info-dashboard { display: flex; gap: 10px; margin-bottom: 20px; }
+        .info-box { flex: 1; padding: 10px; background: white; border-radius: 12px; border-bottom: 3px solid var(--primary); font-size: 14px; }
+        .opt-btn { width: 100%; background: white; border: 2px solid #f1f5f9; padding: 15px; border-radius: 12px; cursor: pointer; margin-bottom: 10px; text-align: left; }
+        .opt-btn.selected { background: var(--primary); color: white; }
+        #subject-section, #quiz-section, #finish-screen { display: none; }
     </style>
 </head>
 <body>
 
-<!-- Welcome Screen -->
+<!-- 1. ലോഗിൻ -->
 <div class="card" id="login-section">
-    <div style="font-size: 40px; margin-bottom: 10px;">🚀</div>
-    <div class="welcome-title">എക്സാം പോർട്ടൽ</div>
-    <p class="welcome-subtitle">നിങ്ങളുടെ വിവരങ്ങൾ നൽകി പരീക്ഷ ആരംഭിക്കാം!</p>
-    
-    <div class="input-container">
-        <input type="text" id="student-name" placeholder="പേര് (Student Name)">
-    </div>
-    <div class="input-container">
-        <input type="text" id="student-class" placeholder="ക്ലാസ്സ് (Class)">
-    </div>
-    
-    <button class="btn-start" onclick="startExam()">പരീക്ഷ തുടങ്ങാം (START)</button>
+    <h1>🚀 Exam Portal</h1>
+    <input type="text" id="student-name" placeholder="പേര് (Student Name)">
+    <input type="text" id="student-class" placeholder="ക്ലാസ്സ് (Class)">
+    <button class="btn-main" onclick="goToSubjects()">തുടങ്ങാം</button>
 </div>
 
-<!-- Exam Screen -->
+<!-- 2. സബ്ജക്ട് സെലക്ഷൻ -->
+<div class="card" id="subject-section">
+    <h2>വിഷയം തിരഞ്ഞെടുക്കുക</h2>
+    <div class="subject-grid">
+        <button class="sub-btn" id="btn-mal" onclick="startQuiz('Malayalam')">Malayalam</button>
+        <button class="sub-btn" id="btn-eng" onclick="startQuiz('English')">English</button>
+        <button class="sub-btn" id="btn-mat" onclick="startQuiz('Maths')">Maths</button>
+        <button class="sub-btn" id="btn-sci" onclick="startQuiz('Science')">Science</button>
+        <button class="sub-btn" id="btn-soc" onclick="startQuiz('Social')">Social</button>
+    </div>
+</div>
+
+<!-- 3. പരീക്ഷാ സ്ക്രീൻ -->
 <div class="card" id="quiz-section">
-    <!-- Animated Info Bar -->
     <div class="info-dashboard">
-        <div class="info-box">
-            <span class="info-label">Student</span>
-            <span class="info-value" id="display-name">-</span>
-        </div>
-        <div class="info-box class-box">
-            <span class="info-label">Class</span>
-            <span class="info-value" id="display-class">-</span>
-        </div>
+        <div class="info-box"><small>STUDENT</small><br><b id="disp-name"></b></div>
+        <div class="info-box"><small>SUBJECT</small><br><b id="disp-sub"></b></div>
     </div>
-
-    <div class="q-header">
-        <span id="q-count" style="font-weight: bold; color: #64748b;">Question 1/10</span>
-        <div class="timer-tag">⏱ <span id="timer">00:00</span></div>
-    </div>
-
-    <div class="progress-bar-bg"><div class="progress-fill" id="progress-bar"></div></div>
-    
     <div id="quiz-container"></div>
 </div>
 
-<!-- Final Screen -->
+<!-- 4. ഫിനിഷ് സ്ക്രീൻ -->
 <div class="card" id="finish-screen">
-    <span class="confetti">🎉</span>
-    <h2 id="congrats-msg">മിടുക്കാ!</h2>
-    <p style="color: #64748b; margin-bottom: 30px;">നീ വിജയകരമായി പരീക്ഷ പൂർത്തിയാക്കി.</p>
-    <button class="btn-start" onclick="location.reload()">CLOSE</button>
+    <h1>🎉 Done!</h1>
+    <p>ഈ വിഷയം പൂർത്തിയായി.</p>
+    <button class="btn-main" onclick="goToSubjects()">അടുത്ത വിഷയം തിരഞ്ഞെടുക്കൂ</button>
 </div>
 
 <script>
-    const questions = [
-        { q: "1. കേരളത്തിലെ ഏറ്റവും വലിയ ജില്ല ഏതാണ്?", options: ["ഇടുക്കി", "പാലക്കാട്", "മലപ്പുറം", "വയനാട്"] },
-        { q: "2. ഇന്ത്യയുടെ ദേശീയ പക്ഷി ഏതാണ്?", options: ["കുയിൽ", "മയിൽ", "തത്ത", "പ്രാവ്"] },
-        { q: "3. 'രണ്ടാം കേരള സിംഹം' എന്നറിയപ്പെടുന്നത് ആര്?", options: ["പഴശ്ശിരാജ", "വേലുത്തമ്പി ദളവ", "കുഞ്ഞാലി മരക്കാർ", "സി. വി. രാമൻ പിള്ള"] },
-        { q: "4. സസ്യങ്ങൾ ആഹാരം നിർമ്മിക്കുന്ന പ്രക്രിയ ഏത്?", options: ["ശ്വസനം", "പ്രകാശസംശ്ലേഷണം", "ബാഷ്പീകരണം", "വിസരണം"] },
-        { q: "5. മലയാളത്തിലെ ആദ്യത്തെ നോവൽ ഏതാണ്?", options: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "രാമരാജബഹദൂർ"] },
-        { q: "6. സൂര്യപ്രകാശത്തിൽ നിന്നും ലഭിക്കുന്ന വിറ്റാമിൻ ഏത്?", options: ["A", "C", "D", "B"] },
-        { q: "7. ലോക പരിസ്ഥിതി ദിനം എന്ന്?", options: ["ജൂൺ 5", "ജൂലൈ 5", "ജൂൺ 15", "ജൂലൈ 15"] },
-        { q: "8. ഇന്ത്യയുടെ ദേശീയ ഗാനം രചിച്ചത് ആര്?", options: ["ഗാന്ധിജി", "നെഹ്റു", "ടാഗോർ", "തിലകൻ"] },
-        { q: "9. വായുവിൽ ഏറ്റവും കൂടുതലുള്ള വാതകം?", options: ["ഓക്സിജൻ", "നൈട്രജൻ", "ഹൈഡ്രജൻ", "കാർബൺ ഡയോക്സൈഡ്"] },
-        { q: "10. കേരളത്തിന്റെ സംസ്ഥാന മൃഗം ഏത്?", options: ["കടുവ", "ആന", "പശു", "മാൻ"] }
-    ];
+    let studentName = "", studentClass = "", currentSubject = "";
+    let completedSubjects = [];
 
-    let currentIdx = 0;
-    let seconds = 0;
-    let timerInterval;
+    // ചോദ്യങ്ങൾ ഇവിടെ വിഷയങ്ങൾ തിരിച്ചു നൽകാം
+    const allQuestions = {
+        'Malayalam': [
+            { q: "മലയാളത്തിലെ ആദ്യത്തെ നോവൽ?", options: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ"] },
+            { q: "കേരള സിംഹം എന്നറിയപ്പെടുന്നത്?", options: ["പഴശ്ശിരാജ", "വേലുത്തമ്പി", "ദളവ"] }
+        ],
+        'English': [
+            { q: "Opposite of 'Happy'?", options: ["Sad", "Joy", "Angry"] },
+            { q: "Noun in 'The cat sat'?", options: ["Cat", "Sat", "The"] }
+        ],
+        'Maths': [ { q: "10 + 15 = ?", options: ["25", "30", "20"] } ],
+        'Science': [ { q: "Powerhouse of cell?", options: ["Mitochondria", "Nucleus", "Ribosome"] } ],
+        'Social': [ { q: "First PM of India?", options: ["Nehru", "Gandhi", "Ambedkar"] } ]
+    };
 
-    function startExam() {
-        const name = document.getElementById('student-name').value;
-        const sClass = document.getElementById('student-class').value;
+    function goToSubjects() {
+        studentName = document.getElementById('student-name').value;
+        studentClass = document.getElementById('student-class').value;
+        if(!studentName) return alert("പേര് നൽകുക");
 
-        if (!name || !sClass) {
-            alert("ദയവായി വിവരങ്ങൾ നൽകുക!");
-            return;
-        }
-
-        document.getElementById('display-name').innerText = name;
-        document.getElementById('display-class').innerText = sClass;
         document.getElementById('login-section').style.display = 'none';
+        document.getElementById('finish-screen').style.display = 'none';
+        document.getElementById('subject-section').style.display = 'block';
+        document.getElementById('quiz-section').style.display = 'none';
+    }
+
+    let qIdx = 0;
+    function startQuiz(sub) {
+        currentSubject = sub;
+        qIdx = 0;
+        document.getElementById('subject-section').style.display = 'none';
         document.getElementById('quiz-section').style.display = 'block';
-        
-        startTimer();
+        document.getElementById('disp-name').innerText = studentName;
+        document.getElementById('disp-sub').innerText = sub;
         loadQuestion();
     }
 
-    function startTimer() {
-        timerInterval = setInterval(() => {
-            seconds++;
-            let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-            let secs = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerText = `${mins}:${secs}`;
-        }, 1000);
-    }
-
     function loadQuestion() {
-        if (currentIdx >= questions.length) {
-            showFinish();
+        const questions = allQuestions[currentSubject];
+        if(qIdx >= questions.length) {
+            showSubjectFinish();
             return;
         }
-
-        document.getElementById('q-count').innerText = `Question ${currentIdx + 1}/${questions.length}`;
-        document.getElementById('progress-bar').style.width = ((currentIdx) / questions.length) * 100 + '%';
-
-        const item = questions[currentIdx];
+        const item = questions[qIdx];
         document.getElementById('quiz-container').innerHTML = `
-            <div class="q-text">${item.q}</div>
-            <div class="options-list">
-                ${item.options.map(opt => `<button class="opt-btn" onclick="nextStep(this)">${opt}</button>`).join('')}
-            </div>
+            <h3>${item.q}</h3>
+            ${item.options.map(opt => `<button class="opt-btn" onclick="nextQ(this)">${opt}</button>`).join('')}
         `;
     }
 
-    function nextStep(btn) {
+    function nextQ(btn) {
         btn.classList.add('selected');
-        // ബട്ടണുകൾ ലോക്ക് ചെയ്യുന്നു
-        const allBtns = document.querySelectorAll('.opt-btn');
-        allBtns.forEach(b => b.disabled = true);
-
-        setTimeout(() => {
-            currentIdx++;
-            loadQuestion();
-        }, 500);
+        setTimeout(() => { qIdx++; loadQuestion(); }, 500);
     }
 
-    function showFinish() {
-        clearInterval(timerInterval);
-        document.getElementById('progress-bar').style.width = '100%';
+    function showSubjectFinish() {
         document.getElementById('quiz-section').style.display = 'none';
         document.getElementById('finish-screen').style.display = 'block';
-        const name = document.getElementById('student-name').value;
-        document.getElementById('congrats-msg').innerText = `അഭിനന്ദനങ്ങൾ, ${name}!`;
+        // മാർക്ക് സബ്ജക്ട് ആസ് കംപ്ലീറ്റഡ്
+        completedSubjects.push(currentSubject);
+        // സബ്ജക്ട് ബട്ടൺ കളർ മാറ്റാൻ (optional logic here)
     }
 </script>
-
 </body>
 </html>
