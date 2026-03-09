@@ -3,70 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Multi-Subject Exam</title>
+    <title>Elite Exam Portal | Multi-Subject</title>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #4338ca; --secondary: #db2777; --bg: #f8fafc; --success: #059669; --danger: #dc2626; }
-        body { font-family: 'Inter', sans-serif; background: #eef2ff; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-        .card { max-width: 700px; width: 100%; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; align-self: center; }
-        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
-        .sub-btn { padding: 18px; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .sub-btn:hover:not(:disabled) { border-color: var(--primary); background: #f1f5f9; transform: translateY(-2px); }
-        .sub-btn:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; border-color: var(--success); }
-        .btn-main { width: 100%; padding: 16px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; margin-bottom: 15px; font-size: 16px; box-sizing: border-box; }
-        .info-bar { display: flex; justify-content: space-between; background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; border-left: 5px solid var(--primary); }
-        .q-text { font-size: 20px; font-weight: 700; text-align: left; margin-bottom: 20px; color: #1e293b; }
-        .opt-btn { width: 100%; text-align: left; padding: 15px; margin-bottom: 10px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; transition: 0.2s; }
-        .opt-btn:hover { border-color: var(--primary); background: #f8faff; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #e2e8f0; text-align: center; }
-        .pass { color: var(--success); font-weight: bold; }
-        .fail { color: var(--danger); font-weight: bold; }
+        :root {
+            --p-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --s-grad: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
+            --bg: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text);
+        }
+
+        .glass-card {
+            max-width: 650px; width: 100%; background: var(--card-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px; border-radius: 32px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Welcome Design */
+        h1 { font-size: 32px; font-weight: 800; background: var(--p-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        p { color: #94a3b8; margin-bottom: 30px; }
+
+        input {
+            width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px; color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus { outline: none; border-color: #6366f1; background: rgba(255, 255, 255, 0.1); }
+
+        .btn-prime {
+            width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--p-grad);
+            color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-prime:hover { transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5); }
+
+        /* Dashboard Items */
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
+        .sub-btn {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px; border-radius: 20px; color: white; cursor: pointer; transition: 0.3s; font-weight: 600;
+        }
+        .sub-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); border-color: #6366f1; transform: translateY(-5px); }
+        .sub-btn:disabled { opacity: 0.4; border-color: var(--success); cursor: not-allowed; }
+
+        /* Quiz Logic UI */
+        .info-pill-container { display: flex; gap: 10px; margin-bottom: 25px; }
+        .info-pill { background: rgba(255, 255, 255, 0.05); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .q-area { text-align: left; }
+        .q-text { font-size: 22px; font-weight: 700; margin-bottom: 25px; line-height: 1.4; color: #f1f5f9; }
+        .opt-card {
+            width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; color: #cbd5e1;
+            text-align: left; cursor: pointer; transition: 0.2s; font-size: 16px;
+        }
+        .opt-card:hover { background: rgba(255, 255, 255, 0.08); border-color: #6366f1; }
+        
+        /* Results Table */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
+        th { text-align: left; padding: 12px; color: #64748b; font-size: 12px; text-transform: uppercase; }
+        td { padding: 16px; background: rgba(255, 255, 255, 0.03); }
+        td:first-child { border-radius: 12px 0 0 12px; }
+        td:last-child { border-radius: 0 12px 12px 0; }
+
         #subject-screen, #quiz-screen, #result-screen { display: none; }
     </style>
 </head>
 <body>
 
-<!-- ലോഗിൻ -->
-<div class="card" id="login-screen">
-    <h1 style="color: var(--primary);">🎓 പരീക്ഷാ പോർട്ടൽ</h1>
-    <input type="text" id="s-name" placeholder="പേര് (Full Name)">
-    <input type="text" id="s-class" placeholder="ക്ലാസ്സ് (Class)">
-    <button class="btn-main" onclick="showSubjects()">പ്രവേശിക്കുക</button>
+<!-- Step 1: Elite Login -->
+<div class="glass-card" id="login-screen">
+    <div style="font-size: 48px; margin-bottom: 20px;">💎</div>
+    <h1>Elite Exam Portal</h1>
+    <p>Enter your credentials to access the examination.</p>
+    <input type="text" id="s-name" placeholder="Full Name">
+    <input type="text" id="s-class" placeholder="Class / Grade">
+    <button class="btn-prime" onclick="showSubjects()">GET STARTED</button>
 </div>
 
-<!-- വിഷയം തിരഞ്ഞെടുക്കൽ -->
-<div class="card" id="subject-screen">
-    <h2 id="welcome-msg">ഹലോ!</h2>
+<!-- Step 2: Subject Hub -->
+<div class="glass-card" id="subject-screen">
+    <h2 id="welcome-msg" style="margin:0">Welcome back!</h2>
+    <p>Select a subject to begin your 10-question assessment.</p>
     <div class="sub-grid">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
-        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Maths</button>
+        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
         <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
-        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social</button>
+        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
     </div>
-    <button id="final-res-btn" class="btn-main" style="display:none; background: var(--success);" onclick="showFinalResult()">VIEW RESULT 📜</button>
+    <button id="final-res-btn" class="btn-prime" style="display:none; background: var(--s-grad);" onclick="showFinalResult()">GENERATE FINAL REPORT 📊</button>
 </div>
 
-<!-- പരീക്ഷാ ഭാഗം -->
-<div class="card" id="quiz-screen">
-    <div class="info-bar">
-        <span>വിഷയം: <b id="cur-sub"></b></span>
-        <span>ചോദ്യം: <b id="q-count">0/10</b></span>
+<!-- Step 3: Immersive Quiz -->
+<div class="glass-card" id="quiz-screen">
+    <div class="info-pill-container">
+        <div class="info-pill" id="cur-sub">SUBJECT</div>
+        <div class="info-pill" id="q-count">0/10</div>
     </div>
-    <div id="quiz-container"></div>
+    <div class="q-area" id="quiz-container"></div>
 </div>
 
-<!-- റിസൾട്ട് -->
-<div class="card" id="result-screen">
-    <h2 style="color: var(--primary);">പരീക്ഷാ ഫലം</h2>
+<!-- Step 4: Final Analytics -->
+<div class="glass-card" id="result-screen">
+    <h2 style="margin:0">Examination Report</h2>
     <p id="student-meta"></p>
     <table>
-        <thead><tr><th>വിഷയം</th><th>മാർക്ക്</th><th>ഫലം</th></tr></thead>
+        <thead><tr><th>Subject</th><th>Score</th><th>Result</th></tr></thead>
         <tbody id="result-body"></tbody>
     </table>
-    <h3 id="overall-msg" style="margin-top:25px;"></h3>
-    <button class="btn-main" onclick="location.reload()">RESTART</button>
+    <div id="overall-msg" style="margin-top:30px; font-weight: 800; font-size: 20px;"></div>
+    <button class="btn-prime" style="margin-top:20px; background: rgba(255,255,255,0.1);" onclick="location.reload()">LOGOUT</button>
 </div>
 
 <script>
@@ -141,42 +201,39 @@
     function showSubjects() {
         student.name = document.getElementById('s-name').value;
         student.class = document.getElementById('s-class').value;
-        if(!student.name || !student.class) return alert("വിവരങ്ങൾ നൽകുക!");
+        if(!student.name || !student.class) return alert("Enter Student Details!");
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = `ഹലോ, ${student.name}!`;
+        document.getElementById('welcome-msg').innerText = `Hello, ${student.name}!`;
     }
 
     function startQuiz(sub) {
-        currentSub = sub;
-        qIdx = 0;
-        marks[sub] = 0;
+        currentSub = sub; qIdx = 0; marks[sub] = 0;
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
-        document.getElementById('cur-sub').innerText = sub;
+        document.getElementById('cur-sub').innerText = sub.toUpperCase();
         loadQ();
     }
 
     function loadQ() {
         const subQs = questions[currentSub];
         if(qIdx >= subQs.length) { finishSub(); return; }
-        document.getElementById('q-count').innerText = `${qIdx+1}/10`;
+        document.getElementById('q-count').innerText = `${qIdx+1} / 10`;
         const item = subQs[qIdx];
         document.getElementById('quiz-container').innerHTML = `
             <div class="q-text">${item.q}</div>
-            ${item.opts.map(o => `<button class="opt-btn" onclick="check('${o}')">${o}</button>`).join('')}
+            ${item.opts.map(o => `<button class="opt-card" onclick="check('${o}')">${o}</button>`).join('')}
         `;
     }
 
     function check(sel) {
         if(sel === questions[currentSub][qIdx].a) marks[currentSub]++;
-        qIdx++;
-        loadQ();
+        qIdx++; loadQ();
     }
 
     function finishSub() {
         document.getElementById('btn-' + currentSub).disabled = true;
-        document.getElementById('btn-' + currentSub).innerText = currentSub + " (✅)";
+        document.getElementById('btn-' + currentSub).style.background = "rgba(34, 197, 94, 0.1)";
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
         if(Object.keys(marks).length === 5) document.getElementById('final-res-btn').style.display = 'block';
@@ -185,16 +242,15 @@
     function showFinalResult() {
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('student-meta').innerText = `${student.name} | Class: ${student.class}`;
+        document.getElementById('student-meta').innerText = `${student.name} | ${student.class}`;
         let html = ""; let allPass = true;
         for(let s in questions) {
-            let m = marks[s] || 0;
-            let status = m >= 5 ? "PASS" : "FAIL";
+            let m = marks[s] || 0; let status = m >= 5 ? "PASS" : "FAIL";
             if(status === "FAIL") allPass = false;
-            html += `<tr><td>${s}</td><td>${m}/10</td><td class="${status.toLowerCase()}">${status}</td></tr>`;
+            html += `<tr><td>${s}</td><td>${m}/10</td><td style="color:${status==='PASS'?'#22c55e':'#ef4444'}">${status}</td></tr>`;
         }
         document.getElementById('result-body').innerHTML = html;
-        document.getElementById('overall-msg').innerHTML = allPass ? "<span class='pass'>എല്ലാ വിഷയത്തിലും വിജയിച്ചു! 🏆</span>" : "<span class='fail'>ചില വിഷയങ്ങളിൽ പരാജയപ്പെട്ടു. വീണ്ടും ശ്രമിക്കൂ!</span>";
+        document.getElementById('overall-msg').innerHTML = allPass ? "GRADUATED 🏆" : "NEED RE-ATTEMPT ❌";
     }
 </script>
 </body>
