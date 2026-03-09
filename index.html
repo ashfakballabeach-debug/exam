@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Exam | Result Portal</title>
+    <title>പരീക്ഷാ | Result Portal</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
@@ -57,24 +57,24 @@
 
 <!-- ലോഗിൻ സ്ക്രീൻ -->
 <div class="glass-card" id="login-screen" style="display: block;">
-    <h1 style="color: var(--primary);">Quantum Exam</h1>
+    <h1 style="color: var(--primary);">പരീക്ഷാ</h1>
     <p>വിവരങ്ങൾ നൽകി പരീക്ഷ ആരംഭിക്കുക</p>
     <input type="text" id="s-name" placeholder="Student Name" style="width:100%; padding:16px; border-radius:12px; border:1px solid #444; background:#222; color:#fff; margin-bottom:15px;">
     <input type="text" id="s-class" placeholder="Class" style="width:100%; padding:16px; border-radius:12px; border:1px solid #444; background:#222; color:#fff; margin-bottom:15px;">
-    <button class="btn-main" onclick="showSubjects()">START EXAMINATION</button>
+    <button class="btn-main" onclick="showSubjects()">പരീക്ഷാ ആരംഭികുക</button>
 </div>
 
 <!-- സബ്ജക്ട് ഹബ് -->
 <div class="glass-card" id="subject-screen">
-    <h2>Dashboard</h2>
+    <h2>വിഷയം തിരഞ്ഞെടുക്കുക</h2>
     <div class="sub-grid">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
         <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
-        <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
-        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
+        <button class="sub-btn" id="btn-Science" onclick="startQuiz('EVS')">EVS</button>
+        <button class="sub-btn" id="btn-Social" onclick="startQuiz('HINDI')">HINDI</button>
     </div>
-    <button id="final-res-btn" class="btn-main" style="display:none;" onclick="showFinalResult()">VIEW FINAL REPORT 📊</button>
+    <button id="final-res-btn" class="btn-main" style="display:none;" onclick="showFinalResult()">ഫലം സന്ദർശികുക📊</button>
 </div>
 
 <!-- പരീക്ഷാ സ്ക്രീൻ -->
@@ -88,7 +88,7 @@
 
 <!-- ഫൈനൽ റിസൾട്ട് വിത്ത് പാസ്സ്/ഫെയിൽ -->
 <div class="glass-card" id="result-screen">
-    <div class="result-headline">Final Report Card 📜</div>
+    <div class="result-headline">ഫലം സന്ദർശിക്കു.</div>
     <div id="student-meta" style="margin-bottom: 20px; font-weight: bold; color: var(--secondary); font-size: 18px;"></div>
     
     <table>
