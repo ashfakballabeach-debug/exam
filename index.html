@@ -3,138 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexGen Exam Portal | Pro Edition</title>
+    <title>Quantum Exam | Professional Results</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f2fe; /* Neon Cyan */
-            --secondary: #4facfe; /* Royal Blue */
-            --accent: #ff0080; /* Hot Pink for timer/stats */
-            --bg: #0b0e14; /* Deep Space Black */
-            --card-bg: rgba(23, 25, 35, 0.8);
-            --text: #ffffff;
-            --success: #00ff88;
-            --danger: #ff4d4d;
+            --primary: #00f2fe; --secondary: #4facfe; --accent: #ff0080;
+            --bg: #0b0e14; --card-bg: rgba(23, 25, 35, 0.9);
+            --text: #ffffff; --success: #00ff88; --danger: #ff4d4d;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(79, 76, 254, 0.1) 0%, transparent 40%);
+            font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg);
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.1) 0%, transparent 40%);
             margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text);
         }
 
         .glass-card {
             max-width: 750px; width: 100%; background: var(--card-bg);
-            backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px; border-radius: 35px; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-            animation: slideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            text-align: center;
+            animation: slideIn 0.7s ease-out; text-align: center;
         }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 36px; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        h1 { font-size: 32px; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
         
-        input {
-            width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px; color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); outline: none; }
+        /* Result Table Design */
+        .result-headline { font-size: 24px; font-weight: 800; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; border-bottom: 2px solid rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 10px; }
+        th { text-align: left; padding: 15px; color: var(--secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 15px; background: rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; text-align: left; }
+        td:nth-child(2) { font-weight: 700; color: #fff; text-align: center; }
+        td:last-child { border-radius: 0 12px 12px 0; text-align: right; }
 
-        .btn-main {
-            width: 100%; padding: 20px; border: none; border-radius: 15px; background: linear-gradient(45deg, var(--secondary), var(--primary));
-            color: #0b0e14; font-weight: 800; cursor: pointer; transition: 0.4s; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4); }
-
-        .student-banner {
-            display: flex; justify-content: space-between; background: rgba(255, 255, 255, 0.03);
-            padding: 15px 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 30px;
-        }
-        .student-banner div span { display: block; font-size: 10px; color: var(--secondary); font-weight: 800; text-transform: uppercase; }
-        .student-banner div strong { font-size: 16px; color: #fff; }
-
-        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
-        .sub-btn {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 25px; border-radius: 25px; color: white; cursor: pointer; transition: 0.3s; font-weight: 700;
-        }
-        .sub-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); transform: scale(1.03); }
-        .sub-btn:disabled { opacity: 0.3; border-color: var(--success); cursor: not-allowed; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px; }
-        td { padding: 20px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.05); }
-        td:first-child { border-radius: 15px 0 0 15px; font-weight: 700; }
-        td:last-child { border-radius: 0 15px 15px 0; text-align: right; }
-
-        .btn-review { padding: 10px 20px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 800; transition: 0.3s; }
+        .btn-main { width: 100%; padding: 18px; border: none; border-radius: 12px; background: linear-gradient(45deg, var(--secondary), var(--primary)); color: #0b0e14; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .btn-review { padding: 8px 15px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 800; transition: 0.2s; }
         .btn-review:hover { background: var(--primary); color: #000; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 999; padding: 20px; overflow-y: auto; }
-        .modal-card { max-width: 600px; margin: 40px auto; background: #13161d; padding: 40px; border-radius: 35px; border: 1px solid var(--primary); }
-        .review-item { text-align: left; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
+        /* Other sections hidden */
         #login-screen, #subject-screen, #quiz-screen, #result-screen { display: none; }
+        
+        /* Subject/Quiz Buttons */
+        .sub-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; color: white; cursor: pointer; margin-bottom: 10px; width: 100%; text-align: left; transition: 0.3s; }
+        .sub-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); }
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; padding: 20px; overflow-y: auto; }
+        .modal-card { max-width: 600px; margin: 40px auto; background: #13161d; padding: 30px; border-radius: 25px; border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <!-- 1. LOGIN -->
 <div class="glass-card" id="login-screen" style="display: block;">
-    <div style="font-size: 50px; margin-bottom: 10px;">✨</div>
     <h1>Quantum Exam</h1>
-    <p>നെക്സ്റ്റ് ജനറേഷൻ പരീക്ഷാ പോർട്ടലിലേക്ക് സ്വാഗതം</p>
-    <input type="text" id="s-name" placeholder="പൂർണ്ണമായ പേര്">
-    <input type="text" id="s-class" placeholder="ക്ലാസ്സ് (ഉദാ: 10-A)">
-    <button class="btn-main" onclick="showSubjects()">ലോഗിൻ ചെയ്യാം</button>
+    <p>എക്സാം പോർട്ടലിലേക്ക് സ്വാഗതം</p>
+    <input type="text" id="s-name" placeholder="Student Name" style="width:100%; padding:15px; border-radius:10px; border:1px solid #444; background:#222; color:#fff; margin-bottom:10px;">
+    <input type="text" id="s-class" placeholder="Class" style="width:100%; padding:15px; border-radius:10px; border:1px solid #444; background:#222; color:#fff; margin-bottom:10px;">
+    <button class="btn-main" onclick="showSubjects()">START</button>
 </div>
 
 <!-- 2. HUB -->
 <div class="glass-card" id="subject-screen">
     <h1>Dashboard</h1>
-    <div class="sub-grid">
+    <div class="sub-grid" id="sub-buttons">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
-        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Maths</button>
+        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
         <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
-        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social</button>
+        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
     </div>
-    <button id="final-res-btn" class="btn-main" style="display:none; background: var(--accent); color: white;" onclick="showFinalResult()">ഫൈനൽ റിപ്പോർട്ട് കാണാം 📊</button>
+    <button id="final-res-btn" class="btn-main" style="display:none;" onclick="showFinalResult()">VIEW FINAL RESULT 📊</button>
 </div>
 
 <!-- 3. QUIZ -->
 <div class="glass-card" id="quiz-screen">
-    <div class="student-banner">
-        <div><span>Candidate</span><strong id="live-name">---</strong></div>
-        <div style="text-align: right;"><span>Grade</span><strong id="live-class">---</strong></div>
-    </div>
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:bold; color:var(--primary); letter-spacing: 1px;">
+    <div id="quiz-header" style="display:flex; justify-content:space-between; color:var(--primary); margin-bottom:20px; font-weight:bold;">
         <span id="cur-sub-display">SUBJECT</span>
         <span id="q-counter">1/10</span>
     </div>
     <div id="quiz-container"></div>
 </div>
 
-<!-- 4. RESULT -->
+<!-- 4. FINAL RESULT (Updated with Headline and Table) -->
 <div class="glass-card" id="result-screen">
-    <h1>Report Card</h1>
-    <p id="student-meta" style="color:var(--primary); font-weight:bold; letter-spacing: 1px;"></p>
+    <div class="result-headline">Official Exam Report 📜</div>
+    <div id="student-meta" style="margin-bottom: 20px; font-weight: bold; color: var(--secondary);"></div>
+    
     <table>
-        <tbody id="result-table-body"></tbody>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th style="text-align: center;">Mark</th>
+                <th style="text-align: right;">Review</th>
+            </tr>
+        </thead>
+        <tbody id="result-table-body">
+            <!-- Results will load here -->
+        </tbody>
     </table>
+
     <div id="overall-status" style="margin-top:25px; font-weight:800; font-size:24px;"></div>
-    <button class="btn-main" style="margin-top:30px; background:rgba(255,255,255,0.05); color:white;" onclick="location.reload()">ലോഗൗട്ട്</button>
+    <button class="btn-main" style="background: rgba(255,255,255,0.05); color:#fff;" onclick="location.reload()">LOGOUT</button>
 </div>
 
-<!-- REVIEW -->
+<!-- MODAL -->
 <div class="modal" id="review-modal">
     <div class="modal-card">
-        <h2 id="modal-title" style="color:var(--primary)">Review</h2>
-        <div id="modal-content"></div>
-        <button class="btn-main" style="margin-top:30px;" onclick="closeModal()">തിരികെ പോകാം</button>
+        <h2 id="modal-title" style="color:var(--primary); margin-top:0;">Answer Key</h2>
+        <div id="modal-content" style="text-align: left;"></div>
+        <button class="btn-main" onclick="closeModal()">CLOSE</button>
     </div>
 </div>
 
@@ -150,7 +131,7 @@
             { q: "കുമാരനാശാന്റെ പ്രസിദ്ധമായ കൃതി?", opts: ["വീണപൂവ്", "കൃഷ്ണഗാഥ", "രാമചരിതം", "നളചരിതം"], a: "വീണപൂവ്" },
             { q: "കേരളത്തിന്റെ ഔദ്യോഗിക ഭാഷ?", opts: ["മലയാളം", "തമിഴ്", "കന്നഡ", "ഹിന്ദി"], a: "മലയാളം" },
             { q: "ജ്ഞാനപീഠം ലഭിച്ച ആദ്യ മലയാളി?", opts: ["ജി. ശങ്കരക്കുറുപ്പ്", "എം.ടി", "തകഴി", "ബഷീർ"], a: "ജി. ശങ്കരക്കുറുപ്പ്" },
-            { q: "മലയാള ഭാഷയുടെ പിതാവ്?", opts: ["എഴുത്തച്ഛൻ", "ചെറുശ്ശേരി", "കുഞ്ചൻ നമ്പ്യാർ", "പൂന്താനം"], a: "എഴുത്തച്ഛൻ" },
+            { q: "മലയാള ഭാഷയുടെ പിതാവ്?", opts: ["എഴുത്തച്ഛൻ", "ചെറുശ്ശേരി", "കുঞ্চൻ നമ്പ്യാർ", "പൂന്താനം"], a: "എഴുത്തച്ഛൻ" },
             { q: "മലയാളത്തിലെ ഏറ്റവും വലിയ അക്ഷരം?", opts: ["ക്ഷ", "ഹ", "റ", "ല"], a: "ക്ഷ" },
             { q: "ലക്ഷദ്വീപിലെ സംസാരഭാഷ?", opts: ["മലയാളം", "മഹൽ", "തമിഴ്", "ഹിന്ദി"], a: "മഹൽ" },
             { q: "മലയാളം സർവ്വകലാശാല എവിടെ?", opts: ["തിരൂർ", "കൊച്ചി", "കണ്ണൂർ", "കോട്ടയം"], a: "തിരൂർ" }
@@ -217,8 +198,6 @@
         currentSub = sub; qIdx = 0; marks[sub] = 0; userAnswers[sub] = [];
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
-        document.getElementById('live-name').innerText = student.name;
-        document.getElementById('live-class').innerText = student.class;
         document.getElementById('cur-sub-display').innerText = sub.toUpperCase();
         loadQ();
     }
@@ -229,9 +208,9 @@
         document.getElementById('q-counter').innerText = `${qIdx+1} / 10`;
         const item = subQs[qIdx];
         document.getElementById('quiz-container').innerHTML = `
-            <div style="font-size:22px; font-weight:700; margin:25px 0; text-align:left; line-height:1.4;">${item.q}</div>
+            <div style="font-size:22px; font-weight:700; margin:25px 0; text-align:left;">${item.q}</div>
             <div style="display:grid; gap:12px;">
-                ${item.opts.map(o => `<button class="sub-btn" style="padding:15px; text-align:left; border-radius:15px;" onclick="check('${o}')">${o}</button>`).join('')}
+                ${item.opts.map(o => `<button class="sub-btn" style="text-align:left;" onclick="check('${o}')">${o}</button>`).join('')}
             </div>
         `;
     }
@@ -244,6 +223,7 @@
 
     function finishSub() {
         document.getElementById('btn-' + currentSub).disabled = true;
+        document.getElementById('btn-' + currentSub).style.opacity = "0.5";
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
         if(Object.keys(marks).length === 5) document.getElementById('final-res-btn').style.display = 'block';
@@ -253,13 +233,20 @@
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
         document.getElementById('student-meta').innerText = `${student.name.toUpperCase()} | CLASS: ${student.class}`;
+        
         let html = ""; let allPass = true;
         for(let s in questions) {
             let m = marks[s] || 0; if(m < 5) allPass = false;
-            html += `<tr><td>${s}</td><td>${m}/10</td><td><button class="btn-review" onclick="openReview('${s}')">REVIEW</button></td></tr>`;
+            html += `<tr>
+                <td>${s}</td>
+                <td style="text-align:center;">${m}/10</td>
+                <td style="text-align:right;"><button class="btn-review" onclick="openReview('${s}')">REVIEW</button></td>
+            </tr>`;
         }
         document.getElementById('result-table-body').innerHTML = html;
-        document.getElementById('overall-status').innerHTML = allPass ? "<span style='color:var(--success)'>QUALIFIED 🏆</span>" : "<span style='color:var(--danger)'>RE-ATTEMPT ❌</span>";
+        document.getElementById('overall-status').innerHTML = allPass ? 
+            "<span style='color:var(--success)'>QUALIFIED 🏆</span>" : 
+            "<span style='color:var(--danger)'>RE-ATTEMPT ❌</span>";
     }
 
     function openReview(sub) {
@@ -268,8 +255,8 @@
         let content = "";
         questions[sub].forEach((q, i) => {
             let uAns = userAnswers[sub][i]; let correct = q.a;
-            content += `<div class="review-item">
-                <div style="font-weight:700; margin-bottom:5px;">${i+1}. ${q.q}</div>
+            content += `<div style="padding:15px; border-bottom:1px solid #333;">
+                <div style="font-weight:bold; margin-bottom:5px;">${i+1}. ${q.q}</div>
                 <div style="font-size:14px; color:${uAns===correct?'var(--success)':'var(--danger)'}">Your: ${uAns}</div>
                 ${uAns!==correct ? `<div style="font-size:14px; color:var(--success)">Correct: ${correct}</div>` : ""}
             </div>`;
