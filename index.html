@@ -3,65 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Exam Portal | Live Student Info</title>
+    <title>NexGen Exam Portal | Pro Edition</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1; --secondary: #a855f7; --bg: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.05); --text: #f8fafc;
-            --success: #10b981; --danger: #ef4444;
+            --primary: #00f2fe; /* Neon Cyan */
+            --secondary: #4facfe; /* Royal Blue */
+            --accent: #ff0080; /* Hot Pink for timer/stats */
+            --bg: #0b0e14; /* Deep Space Black */
+            --card-bg: rgba(23, 25, 35, 0.8);
+            --text: #ffffff;
+            --success: #00ff88;
+            --danger: #ff4d4d;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg);
-            background-image: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 40%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(79, 76, 254, 0.1) 0%, transparent 40%);
             margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text);
         }
 
         .glass-card {
             max-width: 750px; width: 100%; background: var(--card-bg);
-            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            animation: fadeIn 0.6s ease-out; text-align: center;
+            backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px; border-radius: 35px; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            animation: slideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 32px; font-weight: 800; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 36px; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
         
         input {
-            width: 100%; padding: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;
+            width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;
         }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); outline: none; }
+
         .btn-main {
-            width: 100%; padding: 18px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 16px;
+            width: 100%; padding: 20px; border: none; border-radius: 15px; background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: #0b0e14; font-weight: 800; cursor: pointer; transition: 0.4s; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;
         }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4); }
 
-        /* Live Student Banner during Exam */
         .student-banner {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 12px 20px; border-radius: 15px; margin-bottom: 25px; text-align: left;
+            display: flex; justify-content: space-between; background: rgba(255, 255, 255, 0.03);
+            padding: 15px 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 30px;
         }
-        .student-banner div span { display: block; font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: bold; }
-        .student-banner div strong { font-size: 15px; color: #fff; }
+        .student-banner div span { display: block; font-size: 10px; color: var(--secondary); font-weight: 800; text-transform: uppercase; }
+        .student-banner div strong { font-size: 16px; color: #fff; }
 
-        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
         .sub-btn {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px; border-radius: 20px; color: white; cursor: pointer; transition: 0.3s; font-weight: 600;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px; border-radius: 25px; color: white; cursor: pointer; transition: 0.3s; font-weight: 700;
         }
-        .sub-btn:disabled { opacity: 0.4; border-color: var(--success); }
+        .sub-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); transform: scale(1.03); }
+        .sub-btn:disabled { opacity: 0.3; border-color: var(--success); cursor: not-allowed; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 25px; background: rgba(255,255,255,0.02); border-radius: 15px; overflow: hidden; }
-        th, td { padding: 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 12px; text-transform: uppercase; }
-        .btn-review { padding: 8px 15px; background: var(--primary); border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 12px; font-weight: bold; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px; }
+        td { padding: 20px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        td:first-child { border-radius: 15px 0 0 15px; font-weight: 700; }
+        td:last-child { border-radius: 0 15px 15px 0; text-align: right; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 100; padding: 20px; overflow-y: auto; }
-        .modal-card { max-width: 600px; margin: 40px auto; background: #1e293b; padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
-        .review-item { text-align: left; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-review { padding: 10px 20px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 800; transition: 0.3s; }
+        .btn-review:hover { background: var(--primary); color: #000; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 999; padding: 20px; overflow-y: auto; }
+        .modal-card { max-width: 600px; margin: 40px auto; background: #13161d; padding: 40px; border-radius: 35px; border: 1px solid var(--primary); }
+        .review-item { text-align: left; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         #login-screen, #subject-screen, #quiz-screen, #result-screen { display: none; }
     </style>
@@ -70,59 +84,57 @@
 
 <!-- 1. LOGIN -->
 <div class="glass-card" id="login-screen" style="display: block;">
-    <h1>Elite Exam Portal</h1>
-    <p>വിവരങ്ങൾ നൽകി പരീക്ഷ ആരംഭിക്കുക</p>
-    <input type="text" id="s-name" placeholder="Student Name">
-    <input type="text" id="s-class" placeholder="Class">
-    <button class="btn-main" onclick="showSubjects()">START EXAMINATION</button>
+    <div style="font-size: 50px; margin-bottom: 10px;">✨</div>
+    <h1>Quantum Exam</h1>
+    <p>നെക്സ്റ്റ് ജനറേഷൻ പരീക്ഷാ പോർട്ടലിലേക്ക് സ്വാഗതം</p>
+    <input type="text" id="s-name" placeholder="പൂർണ്ണമായ പേര്">
+    <input type="text" id="s-class" placeholder="ക്ലാസ്സ് (ഉദാ: 10-A)">
+    <button class="btn-main" onclick="showSubjects()">ലോഗിൻ ചെയ്യാം</button>
 </div>
 
-<!-- 2. SUBJECT HUB -->
+<!-- 2. HUB -->
 <div class="glass-card" id="subject-screen">
-    <h2 id="welcome-msg">Dashboard</h2>
+    <h1>Dashboard</h1>
     <div class="sub-grid">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
-        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
+        <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Maths</button>
         <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
-        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
+        <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social</button>
     </div>
-    <button id="final-res-btn" class="btn-main" style="display:none; background: var(--success);" onclick="showFinalResult()">VIEW REPORT CARD 📊</button>
+    <button id="final-res-btn" class="btn-main" style="display:none; background: var(--accent); color: white;" onclick="showFinalResult()">ഫൈനൽ റിപ്പോർട്ട് കാണാം 📊</button>
 </div>
 
-<!-- 3. QUIZ (With Student Info Display) -->
+<!-- 3. QUIZ -->
 <div class="glass-card" id="quiz-screen">
-    <!-- Live Info Banner -->
     <div class="student-banner">
-        <div><span>Candidate Name</span><strong id="live-name">---</strong></div>
-        <div style="text-align: right;"><span>Class / Grade</span><strong id="live-class">---</strong></div>
+        <div><span>Candidate</span><strong id="live-name">---</strong></div>
+        <div style="text-align: right;"><span>Grade</span><strong id="live-class">---</strong></div>
     </div>
-
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:bold; color:var(--primary);">
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:bold; color:var(--primary); letter-spacing: 1px;">
         <span id="cur-sub-display">SUBJECT</span>
         <span id="q-counter">1/10</span>
     </div>
     <div id="quiz-container"></div>
 </div>
 
-<!-- 4. RESULT TABLE -->
+<!-- 4. RESULT -->
 <div class="glass-card" id="result-screen">
     <h1>Report Card</h1>
-    <p id="student-meta" style="color:var(--primary); font-weight:bold;"></p>
+    <p id="student-meta" style="color:var(--primary); font-weight:bold; letter-spacing: 1px;"></p>
     <table>
-        <thead><tr><th>Subject</th><th>Score</th><th>Action</th></tr></thead>
         <tbody id="result-table-body"></tbody>
     </table>
-    <div id="overall-status" style="margin-top:25px; font-weight:800; font-size:20px;"></div>
-    <button class="btn-main" style="margin-top:20px; background:rgba(255,255,255,0.1);" onclick="location.reload()">LOGOUT</button>
+    <div id="overall-status" style="margin-top:25px; font-weight:800; font-size:24px;"></div>
+    <button class="btn-main" style="margin-top:30px; background:rgba(255,255,255,0.05); color:white;" onclick="location.reload()">ലോഗൗട്ട്</button>
 </div>
 
-<!-- REVIEW MODAL -->
+<!-- REVIEW -->
 <div class="modal" id="review-modal">
     <div class="modal-card">
-        <h2 id="modal-title">Review</h2>
+        <h2 id="modal-title" style="color:var(--primary)">Review</h2>
         <div id="modal-content"></div>
-        <button class="btn-main" onclick="closeModal()">CLOSE REVIEW</button>
+        <button class="btn-main" style="margin-top:30px;" onclick="closeModal()">തിരികെ പോകാം</button>
     </div>
 </div>
 
@@ -196,22 +208,18 @@
     function showSubjects() {
         student.name = document.getElementById('s-name').value;
         student.class = document.getElementById('s-class').value;
-        if(!student.name || !student.class) return alert("Enter Student Details!");
+        if(!student.name || !student.class) return alert("ദയവായി വിവരങ്ങൾ നൽകുക!");
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = `Hello, ${student.name}!`;
     }
 
     function startQuiz(sub) {
         currentSub = sub; qIdx = 0; marks[sub] = 0; userAnswers[sub] = [];
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
-        
-        // Update Live Info Display
         document.getElementById('live-name').innerText = student.name;
         document.getElementById('live-class').innerText = student.class;
         document.getElementById('cur-sub-display').innerText = sub.toUpperCase();
-        
         loadQ();
     }
 
@@ -221,9 +229,9 @@
         document.getElementById('q-counter').innerText = `${qIdx+1} / 10`;
         const item = subQs[qIdx];
         document.getElementById('quiz-container').innerHTML = `
-            <div style="font-size:22px; font-weight:700; margin:25px 0; text-align:left;">${item.q}</div>
+            <div style="font-size:22px; font-weight:700; margin:25px 0; text-align:left; line-height:1.4;">${item.q}</div>
             <div style="display:grid; gap:12px;">
-                ${item.opts.map(o => `<button class="sub-btn" style="padding:15px; text-align:left;" onclick="check('${o}')">${o}</button>`).join('')}
+                ${item.opts.map(o => `<button class="sub-btn" style="padding:15px; text-align:left; border-radius:15px;" onclick="check('${o}')">${o}</button>`).join('')}
             </div>
         `;
     }
@@ -244,11 +252,11 @@
     function showFinalResult() {
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('student-meta').innerText = `${student.name} | ${student.class}`;
+        document.getElementById('student-meta').innerText = `${student.name.toUpperCase()} | CLASS: ${student.class}`;
         let html = ""; let allPass = true;
         for(let s in questions) {
             let m = marks[s] || 0; if(m < 5) allPass = false;
-            html += `<tr><td>${s}</td><td>${m}/10</td><td><button class="btn-review" onclick="openReview('${s}')">Review</button></td></tr>`;
+            html += `<tr><td>${s}</td><td>${m}/10</td><td><button class="btn-review" onclick="openReview('${s}')">REVIEW</button></td></tr>`;
         }
         document.getElementById('result-table-body').innerHTML = html;
         document.getElementById('overall-status').innerHTML = allPass ? "<span style='color:var(--success)'>QUALIFIED 🏆</span>" : "<span style='color:var(--danger)'>RE-ATTEMPT ❌</span>";
@@ -261,7 +269,7 @@
         questions[sub].forEach((q, i) => {
             let uAns = userAnswers[sub][i]; let correct = q.a;
             content += `<div class="review-item">
-                <div style="font-weight:700;">${i+1}. ${q.q}</div>
+                <div style="font-weight:700; margin-bottom:5px;">${i+1}. ${q.q}</div>
                 <div style="font-size:14px; color:${uAns===correct?'var(--success)':'var(--danger)'}">Your: ${uAns}</div>
                 ${uAns!==correct ? `<div style="font-size:14px; color:var(--success)">Correct: ${correct}</div>` : ""}
             </div>`;
