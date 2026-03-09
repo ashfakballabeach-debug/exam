@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Exam | Professional Results</title>
+    <title>Quantum Exam | Result Portal</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f2fe; --secondary: #4facfe; --accent: #ff0080;
-            --bg: #0b0e14; --card-bg: rgba(23, 25, 35, 0.9);
-            --text: #ffffff; --success: #00ff88; --danger: #ff4d4d;
+            --primary: #00f2fe; --secondary: #4facfe; --bg: #0b0e14;
+            --card-bg: rgba(23, 25, 35, 0.9); --text: #ffffff;
+            --success: #00ff88; --danger: #ff4d4d;
         }
 
         body {
@@ -19,7 +19,7 @@
         }
 
         .glass-card {
-            max-width: 750px; width: 100%; background: var(--card-bg);
+            max-width: 800px; width: 100%; background: var(--card-bg);
             backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px; border-radius: 35px; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
             animation: slideIn 0.7s ease-out; text-align: center;
@@ -27,93 +27,90 @@
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 32px; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .result-headline { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; border-bottom: 2px solid rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
         
-        /* Result Table Design */
-        .result-headline { font-size: 24px; font-weight: 800; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; border-bottom: 2px solid rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
-        
+        /* Table Styling */
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 10px; }
-        th { text-align: left; padding: 15px; color: var(--secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        th { text-align: left; padding: 15px; color: var(--secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
         td { padding: 15px; background: rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(255, 255, 255, 0.05); }
         td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; text-align: left; }
-        td:nth-child(2) { font-weight: 700; color: #fff; text-align: center; }
+        td:nth-child(2), td:nth-child(3) { font-weight: 700; text-align: center; }
         td:last-child { border-radius: 0 12px 12px 0; text-align: right; }
 
-        .btn-main { width: 100%; padding: 18px; border: none; border-radius: 12px; background: linear-gradient(45deg, var(--secondary), var(--primary)); color: #0b0e14; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        .btn-review { padding: 8px 15px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 800; transition: 0.2s; }
-        .btn-review:hover { background: var(--primary); color: #000; }
+        .pass-text { color: var(--success); font-weight: 800; }
+        .fail-text { color: var(--danger); font-weight: 800; }
 
-        /* Other sections hidden */
+        .btn-main { width: 100%; padding: 18px; border: none; border-radius: 12px; background: linear-gradient(45deg, var(--secondary), var(--primary)); color: #0b0e14; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .btn-review { padding: 8px 15px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 800; }
+
         #login-screen, #subject-screen, #quiz-screen, #result-screen { display: none; }
         
-        /* Subject/Quiz Buttons */
-        .sub-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; color: white; cursor: pointer; margin-bottom: 10px; width: 100%; text-align: left; transition: 0.3s; }
+        .sub-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; color: white; cursor: pointer; margin-bottom: 10px; width: 100%; text-align: left; transition: 0.3s; font-size: 16px; }
         .sub-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); }
         .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; padding: 20px; overflow-y: auto; }
-        .modal-card { max-width: 600px; margin: 40px auto; background: #13161d; padding: 30px; border-radius: 25px; border: 1px solid var(--primary); }
+        .modal-card { max-width: 600px; margin: 40px auto; background: #13161d; padding: 35px; border-radius: 25px; border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<!-- 1. LOGIN -->
+<!-- ലോഗിൻ സ്ക്രീൻ -->
 <div class="glass-card" id="login-screen" style="display: block;">
-    <h1>Quantum Exam</h1>
-    <p>എക്സാം പോർട്ടലിലേക്ക് സ്വാഗതം</p>
-    <input type="text" id="s-name" placeholder="Student Name" style="width:100%; padding:15px; border-radius:10px; border:1px solid #444; background:#222; color:#fff; margin-bottom:10px;">
-    <input type="text" id="s-class" placeholder="Class" style="width:100%; padding:15px; border-radius:10px; border:1px solid #444; background:#222; color:#fff; margin-bottom:10px;">
-    <button class="btn-main" onclick="showSubjects()">START</button>
+    <h1 style="color: var(--primary);">Quantum Exam</h1>
+    <p>വിവരങ്ങൾ നൽകി പരീക്ഷ ആരംഭിക്കുക</p>
+    <input type="text" id="s-name" placeholder="Student Name" style="width:100%; padding:16px; border-radius:12px; border:1px solid #444; background:#222; color:#fff; margin-bottom:15px;">
+    <input type="text" id="s-class" placeholder="Class" style="width:100%; padding:16px; border-radius:12px; border:1px solid #444; background:#222; color:#fff; margin-bottom:15px;">
+    <button class="btn-main" onclick="showSubjects()">START EXAMINATION</button>
 </div>
 
-<!-- 2. HUB -->
+<!-- സബ്ജക്ട് ഹബ് -->
 <div class="glass-card" id="subject-screen">
-    <h1>Dashboard</h1>
-    <div class="sub-grid" id="sub-buttons">
+    <h2>Dashboard</h2>
+    <div class="sub-grid">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
         <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
         <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
         <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
     </div>
-    <button id="final-res-btn" class="btn-main" style="display:none;" onclick="showFinalResult()">VIEW FINAL RESULT 📊</button>
+    <button id="final-res-btn" class="btn-main" style="display:none;" onclick="showFinalResult()">VIEW FINAL REPORT 📊</button>
 </div>
 
-<!-- 3. QUIZ -->
+<!-- പരീക്ഷാ സ്ക്രീൻ -->
 <div class="glass-card" id="quiz-screen">
-    <div id="quiz-header" style="display:flex; justify-content:space-between; color:var(--primary); margin-bottom:20px; font-weight:bold;">
+    <div style="display:flex; justify-content:space-between; color:var(--primary); margin-bottom:20px; font-weight:bold;">
         <span id="cur-sub-display">SUBJECT</span>
         <span id="q-counter">1/10</span>
     </div>
     <div id="quiz-container"></div>
 </div>
 
-<!-- 4. FINAL RESULT (Updated with Headline and Table) -->
+<!-- ഫൈനൽ റിസൾട്ട് വിത്ത് പാസ്സ്/ഫെയിൽ -->
 <div class="glass-card" id="result-screen">
-    <div class="result-headline">Official Exam Report 📜</div>
-    <div id="student-meta" style="margin-bottom: 20px; font-weight: bold; color: var(--secondary);"></div>
+    <div class="result-headline">Final Report Card 📜</div>
+    <div id="student-meta" style="margin-bottom: 20px; font-weight: bold; color: var(--secondary); font-size: 18px;"></div>
     
     <table>
         <thead>
             <tr>
                 <th>Subject</th>
                 <th style="text-align: center;">Mark</th>
+                <th style="text-align: center;">Result</th>
                 <th style="text-align: right;">Review</th>
             </tr>
         </thead>
-        <tbody id="result-table-body">
-            <!-- Results will load here -->
-        </tbody>
+        <tbody id="result-table-body"></tbody>
     </table>
 
     <div id="overall-status" style="margin-top:25px; font-weight:800; font-size:24px;"></div>
-    <button class="btn-main" style="background: rgba(255,255,255,0.05); color:#fff;" onclick="location.reload()">LOGOUT</button>
+    <button class="btn-main" style="background: rgba(255,255,255,0.05); color:#fff;" onclick="location.reload()">LOGOUT PORTAL</button>
 </div>
 
-<!-- MODAL -->
+<!-- റിവ്യൂ മോഡൽ -->
 <div class="modal" id="review-modal">
     <div class="modal-card">
-        <h2 id="modal-title" style="color:var(--primary); margin-top:0;">Answer Key</h2>
+        <h2 id="modal-title" style="color:var(--primary); margin-top:0;">Review</h2>
         <div id="modal-content" style="text-align: left;"></div>
         <button class="btn-main" onclick="closeModal()">CLOSE</button>
     </div>
@@ -123,15 +120,16 @@
     let student = { name: "", class: "" };
     let marks = {}; let userAnswers = {}; let currentSub = ""; let qIdx = 0;
 
+    // 50 Questions (10 per subject)
     const questions = {
         'Malayalam': [
-            { q: "മലയാളത്തിലെ ആദ്യ നോവൽ?", opts: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "പാത്തുമ്മയുടെ ആട്"], a: "കുന്ദലത" },
+            { q: "മലയാളത്തിലെ ആദ്യ നോവൽ?", opts: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "രാമരാജബഹദൂർ"], a: "കുന്ദലത" },
             { q: "കേരളത്തിന്റെ മാമാങ്കം നടന്ന സ്ഥലം?", opts: ["തിരുനാവായ", "കൊച്ചി", "കോഴിക്കോട്", "പാലക്കാട്"], a: "തിരുനാവായ" },
             { q: "അക്ഷരമാലയിലെ ആദ്യ അക്ഷരം?", opts: ["അ", "ആ", "ക", "ഖ"], a: "അ" },
             { q: "കുമാരനാശാന്റെ പ്രസിദ്ധമായ കൃതി?", opts: ["വീണപൂവ്", "കൃഷ്ണഗാഥ", "രാമചരിതം", "നളചരിതം"], a: "വീണപൂവ്" },
             { q: "കേരളത്തിന്റെ ഔദ്യോഗിക ഭാഷ?", opts: ["മലയാളം", "തമിഴ്", "കന്നഡ", "ഹിന്ദി"], a: "മലയാളം" },
             { q: "ജ്ഞാനപീഠം ലഭിച്ച ആദ്യ മലയാളി?", opts: ["ജി. ശങ്കരക്കുറുപ്പ്", "എം.ടി", "തകഴി", "ബഷീർ"], a: "ജി. ശങ്കരക്കുറുപ്പ്" },
-            { q: "മലയാള ഭാഷയുടെ പിതാവ്?", opts: ["എഴുത്തച്ഛൻ", "ചെറുശ്ശേരി", "കുঞ্চൻ നമ്പ്യാർ", "പൂന്താനം"], a: "എഴുത്തച്ഛൻ" },
+            { q: "മലയാള ഭാഷയുടെ പിതാവ്?", opts: ["എഴുത്തച്ഛൻ", "ചെറുശ്ശേരി", "കുഞ്ചൻ നമ്പ്യാർ", "പൂന്താനം"], a: "എഴുത്തച്ഛൻ" },
             { q: "മലയാളത്തിലെ ഏറ്റവും വലിയ അക്ഷരം?", opts: ["ക്ഷ", "ഹ", "റ", "ല"], a: "ക്ഷ" },
             { q: "ലക്ഷദ്വീപിലെ സംസാരഭാഷ?", opts: ["മലയാളം", "മഹൽ", "തമിഴ്", "ഹിന്ദി"], a: "മഹൽ" },
             { q: "മലയാളം സർവ്വകലാശാല എവിടെ?", opts: ["തിരൂർ", "കൊച്ചി", "കണ്ണൂർ", "കോട്ടയം"], a: "തിരൂർ" }
@@ -210,7 +208,7 @@
         document.getElementById('quiz-container').innerHTML = `
             <div style="font-size:22px; font-weight:700; margin:25px 0; text-align:left;">${item.q}</div>
             <div style="display:grid; gap:12px;">
-                ${item.opts.map(o => `<button class="sub-btn" style="text-align:left;" onclick="check('${o}')">${o}</button>`).join('')}
+                ${item.opts.map(o => `<button class="sub-btn" onclick="check('${o}')">${o}</button>`).join('')}
             </div>
         `;
     }
@@ -236,10 +234,14 @@
         
         let html = ""; let allPass = true;
         for(let s in questions) {
-            let m = marks[s] || 0; if(m < 5) allPass = false;
+            let m = marks[s] || 0;
+            let status = (m >= 5) ? "PASS" : "FAIL"; // 10-ൽ 5 ആണ് പാസ്സ് മാർക്ക്
+            if(status === "FAIL") allPass = false;
+
             html += `<tr>
                 <td>${s}</td>
                 <td style="text-align:center;">${m}/10</td>
+                <td style="text-align:center;"><span class="${status.toLowerCase()}-text">${status}</span></td>
                 <td style="text-align:right;"><button class="btn-review" onclick="openReview('${s}')">REVIEW</button></td>
             </tr>`;
         }
