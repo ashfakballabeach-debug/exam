@@ -3,141 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Exam Portal | Multi-Subject</title>
+    <title>NexGen Exam Portal | Premium</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --p-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --s-grad: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
-            --bg: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --text: #f8fafc;
-            --success: #22c55e;
-            --danger: #ef4444;
+            --primary: #6366f1; --secondary: #a855f7; --accent: #f59e0b;
+            --bg: #030712; --card: rgba(255, 255, 255, 0.03);
+            --success: #10b981; --danger: #ef4444; --text: #f8fafc;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+            font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg);
+            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
             margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text);
         }
 
         .glass-card {
-            max-width: 650px; width: 100%; background: var(--card-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px; border-radius: 32px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 750px; width: 100%; background: var(--card);
+            backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: slideIn 0.8s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Welcome Design */
-        h1 { font-size: 32px; font-weight: 800; background: var(--p-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        p { color: #94a3b8; margin-bottom: 30px; }
+        /* Typography */
+        h1 { font-size: 36px; font-weight: 800; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; }
+        p { color: #94a3b8; font-size: 16px; }
 
+        /* Forms & Buttons */
+        .input-group { margin-bottom: 20px; text-align: left; }
         input {
             width: 100%; padding: 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px; color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;
+            border-radius: 18px; color: white; font-size: 16px; transition: 0.3s; box-sizing: border-box;
         }
-        input:focus { outline: none; border-color: #6366f1; background: rgba(255, 255, 255, 0.1); }
+        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); outline: none; }
 
-        .btn-prime {
-            width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--p-grad);
-            color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+        .btn-action {
+            width: 100%; padding: 20px; border: none; border-radius: 20px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; font-weight: 700; font-size: 18px; cursor: pointer; transition: 0.4s; margin-top: 10px;
         }
-        .btn-prime:hover { transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5); }
+        .btn-action:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4); }
 
-        /* Dashboard Items */
+        /* Subject Grid */
         .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
         .sub-btn {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 24px; border-radius: 20px; color: white; cursor: pointer; transition: 0.3s; font-weight: 600;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 30px 20px; border-radius: 24px; color: white; cursor: pointer; transition: 0.3s; font-weight: 700; text-align: center;
         }
-        .sub-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); border-color: #6366f1; transform: translateY(-5px); }
+        .sub-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); border-color: var(--primary); transform: translateY(-5px); }
         .sub-btn:disabled { opacity: 0.4; border-color: var(--success); cursor: not-allowed; }
 
-        /* Quiz Logic UI */
-        .info-pill-container { display: flex; gap: 10px; margin-bottom: 25px; }
-        .info-pill { background: rgba(255, 255, 255, 0.05); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.05); }
+        /* Progress & Timer */
+        .stat-pill { background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; font-weight: 600; }
+        .q-text { font-size: 24px; font-weight: 700; margin: 30px 0; text-align: left; line-height: 1.4; color: #f1f5f9; }
 
-        .q-area { text-align: left; }
-        .q-text { font-size: 22px; font-weight: 700; margin-bottom: 25px; line-height: 1.4; color: #f1f5f9; }
-        .opt-card {
-            width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; color: #cbd5e1;
-            text-align: left; cursor: pointer; transition: 0.2s; font-size: 16px;
+        /* Result Dashboard Styling */
+        .result-row { 
+            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 24px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);
         }
-        .opt-card:hover { background: rgba(255, 255, 255, 0.08); border-color: #6366f1; }
-        
-        /* Results Table */
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
-        th { text-align: left; padding: 12px; color: #64748b; font-size: 12px; text-transform: uppercase; }
-        td { padding: 16px; background: rgba(255, 255, 255, 0.03); }
-        td:first-child { border-radius: 12px 0 0 12px; }
-        td:last-child { border-radius: 0 12px 12px 0; }
+        .res-info { text-align: left; }
+        .res-sub { font-weight: 700; font-size: 18px; color: #f8fafc; margin-bottom: 5px; display: block; }
+        .res-bar-bg { width: 150px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+        .res-bar-fill { height: 100%; background: var(--primary); transition: 1s ease; }
+        .btn-review { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .btn-review:hover { background: var(--primary); color: white; }
 
-        #subject-screen, #quiz-screen, #result-screen { display: none; }
+        /* Modal Review */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 999; padding: 20px; overflow-y: auto; }
+        .modal-body { max-width: 650px; margin: 40px auto; background: #0f172a; padding: 40px; border-radius: 32px; border: 1px solid rgba(255,255,255,0.1); }
+        .review-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; margin-bottom: 15px; text-align: left; }
+        
+        #login-screen, #subject-screen, #quiz-screen, #result-screen { display: none; }
     </style>
 </head>
 <body>
 
-<!-- Step 1: Elite Login -->
-<div class="glass-card" id="login-screen">
-    <div style="font-size: 48px; margin-bottom: 20px;">💎</div>
-    <h1>Elite Exam Portal</h1>
-    <p>Enter your credentials to access the examination.</p>
-    <input type="text" id="s-name" placeholder="Full Name">
-    <input type="text" id="s-class" placeholder="Class / Grade">
-    <button class="btn-prime" onclick="showSubjects()">GET STARTED</button>
+<!-- 1. LOGIN -->
+<div class="glass-card" id="login-screen" style="display: block;">
+    <div style="font-size: 50px; margin-bottom: 20px;">⚡</div>
+    <h1>NexGen Exam</h1>
+    <p>Premium Student Assessment Portal</p>
+    <div class="input-group">
+        <input type="text" id="s-name" placeholder="Enter Full Name">
+    </div>
+    <div class="input-group">
+        <input type="text" id="s-class" placeholder="Enter Class">
+    </div>
+    <button class="btn-action" onclick="showSubjects()">AUTHORIZE & START</button>
 </div>
 
-<!-- Step 2: Subject Hub -->
+<!-- 2. SUBJECT HUB -->
 <div class="glass-card" id="subject-screen">
-    <h2 id="welcome-msg" style="margin:0">Welcome back!</h2>
-    <p>Select a subject to begin your 10-question assessment.</p>
-    <div class="sub-grid">
+    <h1 id="welcome-msg">Dashboard</h1>
+    <p>Choose a subject to begin your evaluation.</p>
+    <div class="sub-grid" id="sub-grid">
         <button class="sub-btn" id="btn-Malayalam" onclick="startQuiz('Malayalam')">Malayalam</button>
         <button class="sub-btn" id="btn-English" onclick="startQuiz('English')">English</button>
         <button class="sub-btn" id="btn-Maths" onclick="startQuiz('Maths')">Mathematics</button>
         <button class="sub-btn" id="btn-Science" onclick="startQuiz('Science')">Science</button>
         <button class="sub-btn" id="btn-Social" onclick="startQuiz('Social')">Social Studies</button>
     </div>
-    <button id="final-res-btn" class="btn-prime" style="display:none; background: var(--s-grad);" onclick="showFinalResult()">GENERATE FINAL REPORT 📊</button>
+    <button id="final-res-btn" class="btn-action" style="display:none;" onclick="showFinalResult()">VIEW DETAILED REPORT 📊</button>
 </div>
 
-<!-- Step 3: Immersive Quiz -->
+<!-- 3. IMMERSIVE QUIZ -->
 <div class="glass-card" id="quiz-screen">
-    <div class="info-pill-container">
-        <div class="info-pill" id="cur-sub">SUBJECT</div>
-        <div class="info-pill" id="q-count">0/10</div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div class="stat-pill" id="cur-sub-title">SUBJECT</div>
+        <div class="stat-pill" id="q-counter">0 / 10</div>
     </div>
-    <div class="q-area" id="quiz-container"></div>
+    <div id="quiz-container"></div>
 </div>
 
-<!-- Step 4: Final Analytics -->
+<!-- 4. PROFESSIONAL RESULT -->
 <div class="glass-card" id="result-screen">
-    <h2 style="margin:0">Examination Report</h2>
-    <p id="student-meta"></p>
-    <table>
-        <thead><tr><th>Subject</th><th>Score</th><th>Result</th></tr></thead>
-        <tbody id="result-body"></tbody>
-    </table>
-    <div id="overall-msg" style="margin-top:30px; font-weight: 800; font-size: 20px;"></div>
-    <button class="btn-prime" style="margin-top:20px; background: rgba(255,255,255,0.1);" onclick="location.reload()">LOGOUT</button>
+    <h1>Report Card</h1>
+    <p id="student-meta" style="margin-bottom: 30px;"></p>
+    <div id="result-rows-container"></div>
+    <div id="overall-status" style="margin-top: 30px; font-size: 22px; font-weight: 800;"></div>
+    <button class="btn-action" style="margin-top: 25px; background: rgba(255,255,255,0.05);" onclick="location.reload()">LOGOUT PORTAL</button>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal" id="review-modal">
+    <div class="modal-body">
+        <h2 id="modal-sub" style="margin-top:0">Answer Key</h2>
+        <div id="modal-content"></div>
+        <button class="btn-action" onclick="closeModal()">CLOSE REPORT</button>
+    </div>
 </div>
 
 <script>
     let student = { name: "", class: "" };
-    let marks = {};
-    let currentSub = "";
-    let qIdx = 0;
+    let marks = {}; let userAnswers = {}; let currentSub = ""; let qIdx = 0;
 
+    // 50 Questions Database (10 per subject)
     const questions = {
         'Malayalam': [
-            { q: "മലയാളത്തിലെ ആദ്യ നോവൽ?", opts: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "രാമരാജബഹദൂർ"], a: "കുന്ദലത" },
+            { q: "മലയാളത്തിലെ ആദ്യ നോവൽ?", opts: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "പാത്തുമ്മയുടെ ആട്"], a: "കുന്ദലത" },
             { q: "കേരളത്തിന്റെ മാമാങ്കം നടന്ന സ്ഥലം?", opts: ["തിരുനാവായ", "കൊച്ചി", "കോഴിക്കോട്", "പാലക്കാട്"], a: "തിരുനാവായ" },
             { q: "അക്ഷരമാലയിലെ ആദ്യ അക്ഷരം?", opts: ["അ", "ആ", "ക", "ഖ"], a: "അ" },
             { q: "കുമാരനാശാന്റെ പ്രസിദ്ധമായ കൃതി?", opts: ["വീണപൂവ്", "കൃഷ്ണഗാഥ", "രാമചരിതം", "നളചരിതം"], a: "വീണപൂവ്" },
@@ -201,39 +207,42 @@
     function showSubjects() {
         student.name = document.getElementById('s-name').value;
         student.class = document.getElementById('s-class').value;
-        if(!student.name || !student.class) return alert("Enter Student Details!");
+        if(!student.name || !student.class) return alert("Please enter all details.");
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = `Hello, ${student.name}!`;
+        document.getElementById('welcome-msg').innerText = `Welcome, ${student.name}`;
     }
 
     function startQuiz(sub) {
-        currentSub = sub; qIdx = 0; marks[sub] = 0;
+        currentSub = sub; qIdx = 0; marks[sub] = 0; userAnswers[sub] = [];
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
-        document.getElementById('cur-sub').innerText = sub.toUpperCase();
+        document.getElementById('cur-sub-title').innerText = sub.toUpperCase();
         loadQ();
     }
 
     function loadQ() {
         const subQs = questions[currentSub];
         if(qIdx >= subQs.length) { finishSub(); return; }
-        document.getElementById('q-count').innerText = `${qIdx+1} / 10`;
+        document.getElementById('q-counter').innerText = `${qIdx+1} / 10`;
         const item = subQs[qIdx];
         document.getElementById('quiz-container').innerHTML = `
             <div class="q-text">${item.q}</div>
-            ${item.opts.map(o => `<button class="opt-card" onclick="check('${o}')">${o}</button>`).join('')}
+            <div style="display: grid; gap: 12px;">
+                ${item.opts.map(o => `<button class="sub-btn" style="padding:15px; text-align:left;" onclick="check('${o}')">${o}</button>`).join('')}
+            </div>
         `;
     }
 
     function check(sel) {
+        userAnswers[currentSub].push(sel);
         if(sel === questions[currentSub][qIdx].a) marks[currentSub]++;
         qIdx++; loadQ();
     }
 
     function finishSub() {
         document.getElementById('btn-' + currentSub).disabled = true;
-        document.getElementById('btn-' + currentSub).style.background = "rgba(34, 197, 94, 0.1)";
+        document.getElementById('btn-' + currentSub).style.background = "rgba(16, 185, 129, 0.1)";
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('subject-screen').style.display = 'block';
         if(Object.keys(marks).length === 5) document.getElementById('final-res-btn').style.display = 'block';
@@ -242,16 +251,44 @@
     function showFinalResult() {
         document.getElementById('subject-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('student-meta').innerText = `${student.name} | ${student.class}`;
-        let html = ""; let allPass = true;
+        document.getElementById('student-meta').innerText = `${student.name} | Class ${student.class}`;
+        let container = document.getElementById('result-rows-container'); container.innerHTML = "";
+        let allPass = true;
+
         for(let s in questions) {
-            let m = marks[s] || 0; let status = m >= 5 ? "PASS" : "FAIL";
-            if(status === "FAIL") allPass = false;
-            html += `<tr><td>${s}</td><td>${m}/10</td><td style="color:${status==='PASS'?'#22c55e':'#ef4444'}">${status}</td></tr>`;
+            let m = marks[s] || 0; let pct = (m/10)*100;
+            if(m < 5) allPass = false;
+            container.innerHTML += `
+                <div class="result-row">
+                    <div class="res-info">
+                        <span class="res-sub">${s}</span>
+                        <div class="res-bar-bg"><div class="res-bar-fill" style="width:${pct}%"></div></div>
+                        <small style="color:#94a3b8">${m}/10 Marks</small>
+                    </div>
+                    <button class="btn-review" onclick="openReview('${s}')">Review Result</button>
+                </div>`;
         }
-        document.getElementById('result-body').innerHTML = html;
-        document.getElementById('overall-msg').innerHTML = allPass ? "GRADUATED 🏆" : "NEED RE-ATTEMPT ❌";
+        document.getElementById('overall-status').innerHTML = allPass ? 
+            "<span style='color:var(--success)'>QUALIFIED 🏆</span>" : "<span style='color:var(--danger)'>RE-ATTEMPT REQUIRED ❌</span>";
     }
+
+    function openReview(sub) {
+        document.getElementById('review-modal').style.display = 'block';
+        document.getElementById('modal-sub').innerText = `${sub} - Answer Key`;
+        let content = "";
+        questions[sub].forEach((q, i) => {
+            let uAns = userAnswers[sub][i]; let correct = q.a;
+            content += `
+                <div class="review-box">
+                    <div style="font-weight:700; margin-bottom:10px;">${i+1}. ${q.q}</div>
+                    <div style="font-size:14px; color:${uAns===correct?'var(--success)':'var(--danger)'}">Your: ${uAns}</div>
+                    ${uAns!==correct ? `<div style="font-size:14px; color:var(--success)">Correct: ${correct}</div>` : ""}
+                </div>`;
+        });
+        document.getElementById('modal-content').innerHTML = content;
+    }
+
+    function closeModal() { document.getElementById('review-modal').style.display = 'none'; }
 </script>
 </body>
 </html>
