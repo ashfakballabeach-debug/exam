@@ -3,69 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Online Exam Portal</title>
+    <title>Professional Exam Portal</title>
     <style>
-        :root { --primary: #6c5ce7; --secondary: #a29bfe; --success: #00b894; --bg: #f0f3f9; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        :root { --primary: #2563eb; --secondary: #64748b; --accent: #f59e0b; --bg: #f8fafc; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
         
-        .exam-card { max-width: 500px; width: 100%; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; }
-        
-        /* ലോഗിൻ സ്റ്റൈൽ */
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary); }
-        input { width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .start-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 18px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .start-btn:hover { background: #5649c0; }
+        .card { max-width: 650px; width: 100%; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
 
-        /* പരീക്ഷാ ഭാഗം */
+        /* Student Dashboard Info Bar */
+        .student-info-bar { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #f1f5f9; padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+        }
+        .info-item span { display: block; font-size: 12px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .info-item strong { font-size: 16px; color: #1e293b; }
+
+        /* Inputs & Buttons */
+        .input-box { margin-bottom: 15px; text-align: left; }
+        input { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        /* Quiz Styling */
         #quiz-section { display: none; }
-        .progress-container { background: #eee; height: 8px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        #progress-bar { background: var(--primary); height: 100%; width: 0%; transition: 0.4s; }
-        .q-text { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #2d3436; }
+        .q-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+        .q-text { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 20px; line-height: 1.5; }
         .options-grid { display: grid; gap: 12px; }
-        .opt-btn { background: #f8f9fa; border: 2px solid #edf2f7; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 16px; text-align: left; transition: 0.2s; }
-        .opt-btn:hover { background: #f1f3ff; border-color: var(--secondary); }
-        .opt-btn.selected { background: var(--primary); color: white; }
+        .opt-btn { background: white; border: 1.5px solid #e2e8f0; padding: 16px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 16px; transition: 0.2s; }
+        .opt-btn:hover { background: #f8fafc; border-color: var(--primary); }
+        .opt-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
 
-        #finish-screen { display: none; }
-        .success-icon { font-size: 60px; margin-bottom: 20px; }
+        .progress-container { background: #e2e8f0; height: 6px; border-radius: 10px; margin-bottom: 30px; }
+        #progress-bar { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: 0.4s; }
+
+        #finish-screen { display: none; text-align: center; }
+        .badge { display: inline-block; padding: 4px 12px; background: #dcfce7; color: #166534; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <!-- ലോഗിൻ സ്ക്രീൻ -->
-<div class="exam-card" id="login-section">
-    <h1 style="color: var(--primary);">സ്വാഗതം! 🎓</h1>
-    <p>തുടങ്ങുന്നതിനായി താഴെ വിവരങ്ങൾ നൽകുക</p>
-    <div class="input-group">
-        <label>പേര് (First Name)</label>
-        <input type="text" id="student-name" placeholder="പേര് ടൈപ്പ് ചെയ്യുക">
+<div class="card" id="login-section">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="margin: 0; color: #0f172a;">School Exam Portal</h2>
+        <p style="color: var(--secondary);">വിവരങ്ങൾ നൽകി പരീക്ഷ ആരംഭിക്കുക</p>
     </div>
-    <div class="input-group">
-        <label>ക്ലാസ്സ് (Class)</label>
-        <input type="text" id="student-class" placeholder="ക്ലാസ്സ് നൽകുക">
+    <div class="input-box">
+        <input type="text" id="student-name" placeholder="പൂർണ്ണമായ പേര് (Full Name)">
     </div>
-    <button class="start-btn" onclick="startExam()">പരീക്ഷ തുടങ്ങാം</button>
+    <div class="input-box">
+        <input type="text" id="student-class" placeholder="ക്ലാസ്സ് (ഉദാ: 5-A)">
+    </div>
+    <button class="btn-primary" onclick="startExam()">START EXAMINATION</button>
 </div>
 
 <!-- പരീക്ഷാ സ്ക്രീൻ -->
-<div class="exam-card" id="quiz-section">
-    <div style="display: flex; justify-content: space-between; font-size: 14px; color: #636e72;">
-        <span id="display-name"></span>
-        <span id="q-count">1 / 10</span>
+<div class="card" id="quiz-section">
+    <!-- Professional Info Bar -->
+    <div class="student-info-bar">
+        <div class="info-item">
+            <span>STUDENT</span>
+            <strong id="display-name">Name</strong>
+        </div>
+        <div class="info-item" style="text-align: right;">
+            <span>CLASS</span>
+            <strong id="display-class">Class</strong>
+        </div>
     </div>
-    <div class="progress-container">
-        <div id="progress-bar"></div>
+
+    <div class="q-header">
+        <span style="font-weight: 600; color: var(--primary);" id="q-count">Question 1/10</span>
+        <span id="timer" style="color: var(--accent); font-weight: bold;">00:00</span>
     </div>
+    <div class="progress-container"><div id="progress-bar"></div></div>
+    
     <div id="quiz-container"></div>
 </div>
 
 <!-- ഫിനിഷ് സ്ക്രീൻ -->
-<div class="exam-card" id="finish-screen">
-    <div class="success-icon">🎉</div>
-    <h2 id="congrats-msg">മിടുക്കാ!</h2>
-    <p>നീ പരീക്ഷ വിജയകരമായി പൂർത്തിയാക്കി.</p>
-    <button class="start-btn" onclick="location.reload()">വീണ്ടും എഴുതുക</button>
+<div class="card" id="finish-screen">
+    <span class="badge">COMPLETED</span>
+    <h2 id="congrats-msg">അഭിനന്ദനങ്ങൾ!</h2>
+    <p style="color: var(--secondary); margin-bottom: 30px;">നിങ്ങൾ പരീക്ഷ വിജയകരമായി പൂർത്തിയാക്കിയിരിക്കുന്നു.</p>
+    <button class="btn-primary" onclick="location.reload()">CLOSE PORTAL</button>
 </div>
 
 <script>
@@ -83,20 +105,35 @@
     ];
 
     let currentIdx = 0;
+    let seconds = 0;
+    let timerInterval;
 
     function startExam() {
         const name = document.getElementById('student-name').value;
         const sClass = document.getElementById('student-class').value;
 
-        if (name === "" || sClass === "") {
-            alert("ദയവായി പേരും ക്ലാസ്സും നൽകുക!");
+        if (!name || !sClass) {
+            alert("ദയവായി വിവരങ്ങൾ നൽകുക!");
             return;
         }
 
-        document.getElementById('display-name').innerText = `${name} (Class: ${sClass})`;
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('display-class').innerText = sClass;
         document.getElementById('login-section').style.display = 'none';
         document.getElementById('quiz-section').style.display = 'block';
+        
+        startTimer();
         loadQuestion();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            seconds++;
+            let mins = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            document.getElementById('timer').innerText = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }, 1000);
     }
 
     function loadQuestion() {
@@ -105,7 +142,7 @@
             return;
         }
 
-        document.getElementById('q-count').innerText = `${currentIdx + 1} / ${questions.length}`;
+        document.getElementById('q-count').innerText = `Question ${currentIdx + 1}/${questions.length}`;
         document.getElementById('progress-bar').style.width = (currentIdx / questions.length) * 100 + '%';
 
         const item = questions[currentIdx];
@@ -126,10 +163,11 @@
     }
 
     function showFinish() {
+        clearInterval(timerInterval);
         document.getElementById('quiz-section').style.display = 'none';
         document.getElementById('finish-screen').style.display = 'block';
         const name = document.getElementById('student-name').value;
-        document.getElementById('congrats-msg').innerText = `മിടുക്കൻ/മിടുക്കി ${name}!`;
+        document.getElementById('congrats-msg').innerText = `Well Done, ${name}!`;
     }
 </script>
 
