@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Online Examination</title>
+    <style>
+        :root { --primary-color: #2c3e50; --secondary-color: #3498db; --bg-color: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid var(--bg-color); margin-bottom: 30px; padding-bottom: 10px; }
+        .question-box { margin-bottom: 25px; padding: 15px; border: 1px solid #eee; border-radius: 10px; transition: 0.3s; }
+        .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--primary-color); }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button.opt-btn { background: #fff; border: 1.5px solid #ddd; padding: 12px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1rem; transition: 0.2s; }
+        button.opt-btn:hover { background: #f0f7ff; border-color: var(--secondary-color); }
+        button.opt-btn.selected { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+        button.opt-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+        .submit-container { text-align: center; margin-top: 40px; }
+        #submit-btn { background: #27ae60; color: white; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 30px; cursor: pointer; display: none; }
+        #final-msg { display: none; text-align: center; padding: 40px; }
+        #final-msg h2 { color: #27ae60; }
+        @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <div class="header">
+        <h2>സ്കൂൾ ഓൺലൈൻ പരീക്ഷ</h2>
+        <p>എല്ലാ ചോദ്യങ്ങൾക്കും ഉത്തരം നൽകുക</p>
+    </div>
+
+    <div id="quiz-area">
+        <!-- 10 ചോദ്യങ്ങൾ ഇവിടെ വരും -->
+    </div>
+
+    <div class="submit-container">
+        <button id="submit-btn" onclick="finishExam()">പരീക്ഷ പൂർത്തിയാക്കുക (Submit)</button>
+    </div>
+</div>
+
+<div id="final-msg">
+    <div class="container">
+        <h2>പരീക്ഷ വിജയകരമായി പൂർത്തിയായി!</h2>
+        <p>നിങ്ങളുടെ ഉത്തരങ്ങൾ രേഖപ്പെടുത്തിയിട്ടുണ്ട്. മിടുക്കൻ/മിടുക്കി!</p>
+        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer;">വീണ്ടും എഴുതുക</button>
+    </div>
+</div>
+
+<script>
+    // ചോദ്യങ്ങൾ ഇവിടെ മാറ്റം വരുത്താം
+    const questions = [
+        { q: "1. കേരളത്തിലെ ഏറ്റവും നീളം കൂടിയ നദി ഏത്?", options: ["ഭാരതപ്പുഴ", "പെരിയാർ", "പമ്പ", "ചാലിയാർ"] },
+        { q: "2. ഇന്ത്യയുടെ സ്വാതന്ത്ര്യ ദിനം എന്നാണ്?", options: ["ജനുവരി 26", "ഓഗസ്റ്റ് 15", "ഒക്ടോബർ 2", "നവംബർ 14"] },
+        { q: "3. 'രണ്ടാം കേരള സിംഹം' എന്നറിയപ്പെടുന്നത് ആര്?", options: ["പഴശ്ശിരാജ", "വേലുത്തമ്പി ദളവ", "കുഞ്ഞാലി മരക്കാർ", "സി. വി. രാമൻ പിള്ള"] },
+        { q: "4. ഏറ്റവും കൂടുതൽ ഉപഗ്രഹങ്ങളുള്ള ഗ്രഹം ഏതാണ്?", options: ["വ്യാഴം", "ശനി", "ചൊവ്വ", "ഭൂമി"] },
+        { q: "5. മലയാളത്തിലെ ആദ്യത്തെ നോവൽ ഏതാണ്?", options: ["ഇന്ദുലേഖ", "കുന്ദലത", "ശാരദ", "രാമരാജബഹദൂർ"] },
+        { q: "6. സൂര്യപ്രകാശത്തിൽ നിന്നും ലഭിക്കുന്ന വിറ്റാമിൻ ഏത്?", options: ["വിറ്റാമിൻ A", "വിറ്റാമിൻ C", "വിറ്റാമിൻ D", "വിറ്റാമിൻ B"] },
+        { q: "7. ലോക പരിസ്ഥിതി ദിനം എന്ന്?", options: ["ജൂൺ 5", "ജൂലൈ 5", "ജൂൺ 15", "ജൂലൈ 15"] },
+        { q: "8. ഇന്ത്യയുടെ ദേശീയ ഗാനം രചിച്ചത് ആര്?", options: ["ഗാന്ധിജി", "നെഹ്റു", "ടാഗോർ", "തിലകൻ"] },
+        { q: "9. വായുവിൽ ഏറ്റവും കൂടുതൽ അടങ്ങിയിട്ടുള്ള വാതകം?", options: ["ഓക്സിജൻ", "നൈട്രജൻ", "ഹൈഡ്രജൻ", "കാർബൺ ഡയോക്സൈഡ്"] },
+        { q: "10. കേരളത്തിന്റെ സംസ്ഥാന മൃഗം ഏത്?", options: ["കടുവ", "ആന", "പശു", "മാൻ"] }
+    ];
+
+    const quizArea = document.getElementById('quiz-area');
+    let answeredCount = 0;
+
+    // ചോദ്യങ്ങൾ പേജിലേക്ക് ചേർക്കുന്നു
+    questions.forEach((item, index) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question-box';
+        qDiv.id = `q-box-${index}`;
+        
+        let optionsHTML = '';
+        item.options.forEach(opt => {
+            optionsHTML += `<button class="opt-btn" onclick="selectOption(${index}, this)">${opt}</button>`;
+        });
+
+        qDiv.innerHTML = `<div class="question-text">${item.q}</div><div class="options">${optionsHTML}</div>`;
+        quizArea.appendChild(qDiv);
+    });
+
+    function selectOption(qIdx, btn) {
+        // ആ ചോദ്യത്തിലെ ബട്ടണുകൾ മാത്രം ലോക്ക് ചെയ്യുന്നു
+        const buttons = document.querySelectorAll(`#q-box-${qIdx} .opt-btn`);
+        buttons.forEach(b => b.disabled = true);
+        
+        btn.classList.add('selected');
+        answeredCount++;
+
+        // 10 ചോദ്യവും കഴിഞ്ഞാൽ സബ്മിറ്റ് ബട്ടൺ കാണിക്കും
+        if (answeredCount === questions.length) {
+            document.getElementById('submit-btn').style.display = 'inline-block';
+        }
+    }
+
+    function finishExam() {
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('final-msg').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
